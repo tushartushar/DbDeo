@@ -1,0 +1,2 @@
+# DbDeo
+Database smell detector
