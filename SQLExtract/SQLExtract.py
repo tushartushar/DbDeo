@@ -30,17 +30,14 @@ def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
 def storeSQLStatements(logFile, curfile, resultRoot, repoName):
     resultFile = os.path.join(resultRoot, repoName + ".sql")
     contents = readFileContents(curfile)
-    result1 = re.search(r'select\s.+\sfrom.+(\s.+)*;', contents, re.IGNORECASE)
-    if(result1 != None):
-        log(logFile, "regex match: " + result1.group(0))
-        writeFile(resultFile, result1.group(0))
+    for m in re.finditer(r'select\s+.+\s+from\s+(.+\s)*', contents):
+        log(logFile, "regex match: " + m.group(0))
+        writeFile(resultFile, m.group(0))
 
-    result2 = re.search(r'create\stable\s.+\s*\(.+(\s.+)*;', contents, re.IGNORECASE)
-    if(result2 != None):
-        log(logFile, "regex match: " + result2.group(0))
-        writeFile(resultFile, result2.group(0))
+    for m in re.finditer(r'create\stable\s.+\s*\(.+(\s.+)*;', contents):
+        log(logFile, "regex match: " + m.group(0))
+        writeFile(resultFile, m.group(0))
 
-    result3 = re.search(r'insert\sinto\s.+\svalues.+(\s.+)*;', contents, re.IGNORECASE)
-    if(result3 != None):
-        log(logFile, "regex match: " + result3.group(0))
-        writeFile(resultFile, result3.group(0))
+    for m in re.finditer(r'insert\sinto\s\w+\svalues\s*\((.+?\n?)*?\);', contents):
+        log(logFile, "regex match: " + m.group(0))
+        writeFile(resultFile, m.group(0))
