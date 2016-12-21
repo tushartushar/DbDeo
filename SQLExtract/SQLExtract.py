@@ -25,19 +25,20 @@ def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
         files = [f for f in files if not f[0] == '.']
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for file in files:
+            print("Analyzing file " + str(file))
             storeSQLStatements(logFile, os.path.join(root,file), resultRoot, dir)
 
 def storeSQLStatements(logFile, curfile, resultRoot, repoName):
     resultFile = os.path.join(resultRoot, repoName + ".sql")
     contents = readFileContents(curfile)
-    for m in re.finditer(r'select\s+.+\s+from\s+(.+\s)*', contents):
+    for m in re.finditer(r'(select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?;)|("select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?")', contents):
         log(logFile, "regex match: " + m.group(0))
         writeFile(resultFile, m.group(0))
 
-    for m in re.finditer(r'create\stable\s.+\s*\(.+(\s.+)*;', contents):
+    for m in re.finditer(r'(create\stable\s.+\s*\(.+(\s.+)*;)|("create\stable\s.+\s*\(.+(\s.+)*")', contents):
         log(logFile, "regex match: " + m.group(0))
         writeFile(resultFile, m.group(0))
 
-    for m in re.finditer(r'insert\sinto\s\w+\svalues\s*\((.+?\n?)*?\);', contents):
+    for m in re.finditer(r'("insert\sinto\s\w+\svalues\s*(.+?\n?)*?")|(insert\sinto\s\w+\svalues\s*(.+?\n?)*?;)', contents):
         log(logFile, "regex match: " + m.group(0))
         writeFile(resultFile, m.group(0))
