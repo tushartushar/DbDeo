@@ -97,3 +97,21 @@ class SQLParse(object):
         if not curExpn == "":
             expnList.append(curExpn.strip())
         return expnList
+
+    def getInsertedValues(self):
+        values_seen = False
+        values = []
+        for item in self.parsed.tokens:
+            if item.is_group:
+                for token in item.tokens:
+                    if values_seen:
+                        if token.is_group:
+                            for value in token.tokens:
+                                if value.ttype is Keyword and not (value.value.upper() == 'DEFAULT'):
+                                    return values
+                                else:
+                                    if not (value.value == ',' or value.value == ' '):
+                                        values.append(value)
+            if item.ttype is Keyword and item.value.upper() == 'VALUES':
+                        values_seen = True
+        return values

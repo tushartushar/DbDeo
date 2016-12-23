@@ -3,4 +3,10 @@ class InsertStmt(object):
         self.parsedStmt = parsedStmt
 
     def populate(self):
-        pass
+        self.valueList = self.parsedStmt.getInsertedValues()
+
+    def isContainsCompoundAttribute(self):
+        for token in self.valueList:
+            if ',' in token.value:
+                return True
+        return False

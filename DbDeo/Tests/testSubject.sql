@@ -9,3 +9,4 @@ INSERT INTO EMP VALUES(7934, 'MILLER', 'CLERK', 7782,TO_DATE('23-01-1982', 'DD-M
 INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
  
 SELECT * FROM Products WHERE account_id REGEXP '[[:<:]]12[[:>:]]';
+INSERT INTO Products (product_id, product_name, account_id) VALUES (DEFAULT, 'Visual TurboBuilder', '12,34,banana');

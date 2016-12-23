@@ -17,3 +17,7 @@ class SmellDetector(object):
             if selectStmt.isRegexPresentInWhere():
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 1"
                                     + " Found in following statement: " + selectStmt.parsedStmt.stmt)
+        for insertStmt in self.metaModel.insertStmtList:
+            if insertStmt.isContainsCompoundAttribute():
+                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 2"
+                                    + " Found in following statement: " + insertStmt.parsedStmt.stmt)
