@@ -26,16 +26,21 @@ class SQLParse(object):
     def getStmtType(self):
         return self.sqlStmtType
 
-    def populateReferencedTables(self, parsedStmt):
-        stream = self.extract_from_part(parsedStmt)
-        return list(self.extract_table_identifiers(stream))
+    def populateWhereConditions(self):
+        whereExpn = self.traverseForWhere()
+        whereExpnList = self.splitExpn(whereExpn)
+        return whereExpnList
 
-    def extract_from_part(self, parsed):
+    def populateReferencedTables(self, parsedStmt):
+        stream = self.extractFromPart(parsedStmt)
+        return list(self.extractTableIdentifiers(stream))
+
+    def extractFromPart(self, parsed):
         from_seen = False
         for item in parsed.tokens:
             if from_seen:
-                if self.is_subselect(item):
-                    for x in self.extract_from_part(item):
+                if self.isSubSelect(item):
+                    for x in self.extractFromPart(item):
                         yield x
                 elif item.ttype is Keyword:
                     raise StopIteration
@@ -44,7 +49,7 @@ class SQLParse(object):
             elif item.ttype is Keyword and item.value.upper() == 'FROM':
                 from_seen = True
 
-    def extract_table_identifiers(self, token_stream):
+    def extractTableIdentifiers(self, token_stream):
         for item in token_stream:
             if isinstance(item, IdentifierList):
                 for identifier in item.get_identifiers():
@@ -56,10 +61,39 @@ class SQLParse(object):
             elif item.ttype is Keyword:
                 yield item.value
 
-    def is_subselect(self, parsed):
+    def isSubSelect(self, parsed):
         if not parsed.is_group:
             return False
         for item in parsed.tokens:
             if item.ttype is DML and item.value.upper() == 'SELECT':
                 return True
         return False
+
+    def traverseForWhere(self):
+        where_seen = False
+        whereExpn = []
+        for item in self.parsed.tokens:
+            if item.is_group:
+                for token in item.tokens:
+                    if where_seen:
+                        if token.ttype is Keyword and not (token.value.upper() == 'AND' or token.value.upper() == 'OR'):
+                            return whereExpn
+                        else:
+                            whereExpn.append(token)
+                    elif token.ttype is Keyword and token.value.upper() == 'WHERE':
+                        where_seen = True
+        return whereExpn
+
+    def splitExpn(self, whereExpn):
+        expnList = []
+        curExpn = ""
+        for item in whereExpn:
+            if item.ttype is Keyword:
+                if not curExpn == "":
+                    expnList.append(curExpn.strip())
+                    curExpn = ""
+            else:
+                curExpn += item.value
+        if not curExpn == "":
+            expnList.append(curExpn.strip())
+        return expnList

@@ -1,0 +1,1 @@
+COMPOUND_ATTRIBUTE_SMELL = "Compound Attribute"

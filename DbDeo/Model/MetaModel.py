@@ -1,9 +1,8 @@
-import FileUtils
-import Model.SQLParse
 from Model import SelectStmt, SQLParse
 from Model.CreateStmt import CreateStmt
 from Model.InsertStmt import InsertStmt
 from Model.SQLStmtType import SQLStmtType
+from Utils import FileUtils
 
 
 class MetaModel(object):
