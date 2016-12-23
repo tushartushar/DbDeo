@@ -32,14 +32,17 @@ def storeSQLStatements(logFile, curfile, resultRoot, repoName):
     resultFile = os.path.join(resultRoot, repoName + ".sql")
     contents = readFileContents(curfile)
     for m in re.finditer(r'("select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?")|(select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?;)', contents, re.IGNORECASE):
-        log(logFile, "regex match: " + m.group(0))
-        writeFile(resultFile, m.group(0))
+        query = m.group(0).replace("\n", "")
+        log(logFile, "regex match: " + query)
+        writeFile(resultFile, query)
 
     for m in re.finditer(r'(create\stable\s.+\s*\(.+(\s.+)*;)|("create\stable\s.+\s*\(.+(\s.+)*")', contents, re.IGNORECASE):
-        log(logFile, "regex match: " + m.group(0))
-        writeFile(resultFile, m.group(0))
+        query = m.group(0).replace("\n", "")
+        log(logFile, "regex match: " + query)
+        writeFile(resultFile, query)
 
     for m in re.finditer(r'(insert\sinto\s\w+\svalues\s*(.+?\n?)*?;)|("insert\sinto\s\w+\svalues\s*(.+?\n?)*?")', contents, re.IGNORECASE):
-        log(logFile, "regex match: " + m.group(0))
-        writeFile(resultFile, m.group(0))
+        query = m.group(0).replace("\n", "")
+        log(logFile, "regex match: " + query)
+        writeFile(resultFile, query)
 
