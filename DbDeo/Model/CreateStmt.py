@@ -3,4 +3,12 @@ class CreateStmt(object):
         self.parsedStmt = parsedStmt
 
     def populate(self):
-        pass
+        self.tableName = self.parsedStmt.getTableName()
+        self.columnList = self.parsedStmt.getColumnList()
+
+    def getColumnCount(self):
+        count = 0
+        for col in self.columnList:
+            if not col.isConstraint:
+                count += 1
+        return count

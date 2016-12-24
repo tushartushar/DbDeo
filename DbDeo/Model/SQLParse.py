@@ -2,6 +2,7 @@ import sqlparse
 from sqlparse.tokens import DML, DDL, Keyword
 from sqlparse.sql import IdentifierList, Identifier
 from Model.SQLStmtType import SQLStmtType
+from Model.TableColumn import TableColumn
 
 class SQLParse(object):
     def __init__(self, stmt):
@@ -142,3 +143,102 @@ class SQLParse(object):
             if item.ttype is Keyword and item.value.upper() == 'SET':
                 set_seen = True
         return values
+
+    def getTableName(self):
+        create_seen = False
+        table_seen = False
+        for token in self.parsed.tokens:
+            if create_seen:
+                if table_seen:
+                    if not token.value == ' ':
+                        if token.is_group:
+                            for item in token.tokens:
+                                return item.value
+                        else:
+                            return token.value
+                else:
+                    if token.ttype is Keyword and token.value.upper() == 'TABLE':
+                        table_seen = True
+            else:
+                b1 = token.is_keyword
+                b2 = token.value.upper() == 'CREATE'
+                if b1 and b2:
+                    create_seen = True
+        return ""
+
+    def getColumnDefinitionExpn(self):
+        result = []
+        create_seen = False
+        table_seen = False
+        name_seen = False
+        for token in self.parsed.tokens:
+            if create_seen:
+                if table_seen:
+                    if not token.value == ' ':
+                        if token.is_group:
+                            for item in token.tokens:
+                                if item.is_group:
+                                    for node in item.tokens:
+                                        if not name_seen:
+                                            name_seen = True
+                                            continue
+                                        if name_seen:
+                                            result.append(node)
+                                else:
+                                    if not name_seen:
+                                        name_seen = True
+                                        continue
+                                    if name_seen:
+                                        result.append(item)
+                        else:
+                            if not name_seen:
+                                name_seen = True
+                                continue
+                            if name_seen:
+                                result.append(token)
+                else:
+                    if token.ttype is Keyword and token.value.upper() == 'TABLE':
+                        table_seen = True
+            else:
+                b1 = token.is_keyword
+                b2 = token.value.upper() == 'CREATE'
+                if b1 and b2:
+                    create_seen = True
+        return result
+
+    def getColumnList(self):
+        expn = self.getColumnDefinitionExpn()
+        columns = self.extract_definitions(expn)
+        columnObjs = self.createColumnObjects(columns)
+        return columnObjs
+
+    def extract_definitions(self, token_list):
+        definitions = []
+        curDef = []
+        for token in token_list:
+            if token.value == '(' or token.value == ')':
+                continue
+            if token.is_group:
+                for node in token.tokens:
+                    if node.value == ',':
+                        if not curDef == []:
+                            definitions.append(curDef)
+                            curDef = []
+                    else:
+                        curDef.append(node)
+            elif token.value == ',':
+                if not curDef == []:
+                    definitions.append(curDef)
+                    curDef = []
+            else:
+                curDef.append(token)
+        if not curDef == []:
+            definitions.append(curDef)
+        return definitions
+
+    def createColumnObjects(self, columns):
+        columnObjs = []
+        for column in columns:
+            tableColumn = TableColumn(column)
+            columnObjs.append(tableColumn)
+        return columnObjs

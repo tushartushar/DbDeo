@@ -11,6 +11,7 @@ class SmellDetector(object):
 
     def detectAllDbSmells(self):
         self.detectCompoundAttribute()
+        self.detectAdjacencyList()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -25,3 +26,11 @@ class SmellDetector(object):
             if updateStmt.isContainsCommaInSet():
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 3"
                                     + " Found in following statement: " + updateStmt.parsedStmt.stmt)
+
+    def detectAdjacencyList(self):
+        for createStmt in self.metaModel.createStmtList:
+            for columnObj in createStmt.columnList:
+                if columnObj.isReferences:
+                    if columnObj.referencedTable == createStmt.tableName:
+                        FileUtils.writeFile(self.resultFile, "Detected: " + Constants.ADJACENCY_LIST
+                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)

@@ -3,7 +3,7 @@ from unittest import TestCase
 from Model import SQLParse
 from Model.SQLStmtType import SQLStmtType
 from Model.SelectStmt import SelectStmt
-
+from Model.CreateStmt import CreateStmt
 
 class ParseTests(TestCase):
     def test_checkStmtType_select(self):
@@ -48,3 +48,17 @@ class ParseTests(TestCase):
         selectStmt = SelectStmt(parseObj)
         selectStmt.populate()
         self.assertEqual(selectStmt.isRegexPresentInWhere(), True)
+
+    def test_table_name_in_create(self):
+        sqlStmt = "CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED, comment TEXT NOT NULL, FOREIGN KEY (parent_id) REFERENCES Comments(comment_id));"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.tableName, 'Comments')
+
+    def test_table_column_count_in_create(self):
+        sqlStmt = "CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED, comment TEXT NOT NULL, FOREIGN KEY (parent_id) REFERENCES Comments(comment_id));"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.getColumnCount(), 3)
