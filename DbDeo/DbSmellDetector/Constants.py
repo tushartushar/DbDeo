@@ -1,2 +1,6 @@
 COMPOUND_ATTRIBUTE_SMELL = "Compound Attribute"
 ADJACENCY_LIST = "Adjacency List"
+GOD_TABLE = "God Table"
+
+
+GOD_TABLE_MAX_COLUMN_THRESHOLD = 10
