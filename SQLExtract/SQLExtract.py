@@ -46,3 +46,7 @@ def storeSQLStatements(logFile, curfile, resultRoot, repoName):
         log(logFile, "regex match: " + query)
         writeFile(resultFile, query)
 
+    for m in re.finditer(r'("update\s\w+\sset\s*(.+?\n?)*?(where\s.+?)")|(update\s\w+\sset\s*(.+?\n?)*?(where\s.+?);)', contents, re.IGNORECASE):
+        query = m.group(0).replace("\n", "")
+        log(logFile, "regex match: " + query)
+        writeFile(resultFile, query)

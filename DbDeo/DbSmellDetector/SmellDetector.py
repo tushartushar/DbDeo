@@ -21,3 +21,7 @@ class SmellDetector(object):
             if insertStmt.isContainsCompoundAttribute():
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 2"
                                     + " Found in following statement: " + insertStmt.parsedStmt.stmt)
+        for updateStmt in self.metaModel.updateStmtList:
+            if updateStmt.isContainsCommaInSet():
+                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 3"
+                                    + " Found in following statement: " + updateStmt.parsedStmt.stmt)

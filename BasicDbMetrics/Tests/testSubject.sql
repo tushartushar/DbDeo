@@ -14,4 +14,5 @@ INSERT INTO EMP VALUES
 TO_DATE('23-01-1982', 'DD-MM-YYYY'), 1300, NULL, 10);
 INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
  
- 693559
+UPDATE Products SET account_id = account_id || ',' || 56
+WHERE product_id = 123;

@@ -22,6 +22,9 @@ class SQLParse(object):
                 return SQLStmtType.CREATE
             if token.ttype is DML and token.value.upper() == 'INSERT':
                 return SQLStmtType.INSERT
+            if token.ttype is DML and token.value.upper() == 'UPDATE':
+                return SQLStmtType.UPDATE
+        return SQLStmtType.DEFAULT
 
     def getStmtType(self):
         return self.sqlStmtType
@@ -114,4 +117,28 @@ class SQLParse(object):
                                         values.append(value)
             if item.ttype is Keyword and item.value.upper() == 'VALUES':
                         values_seen = True
+        return values
+
+    def getSetExpn(self):
+        set_seen = False
+        values = []
+        for item in self.parsed.tokens:
+            if set_seen:
+                if item.is_group:
+                    for value in item.tokens:
+                        if value.ttype is Keyword:
+                            return values
+                        else:
+                            if value.is_group:
+                                for node in value.tokens:
+                                    if node.ttype is Keyword:
+                                        return values
+                                    else:
+                                        values.append(node)
+                            else:
+                                values.append(value)
+                else:
+                    values.append(item)
+            if item.ttype is Keyword and item.value.upper() == 'SET':
+                set_seen = True
         return values

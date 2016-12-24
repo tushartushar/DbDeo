@@ -16,9 +16,9 @@ def readFileContents(fileName):
 def computeAllMetrics(sourceRoot, file, resultFile):
     curfile = os.path.join(sourceRoot, file)
     contents = readFileContents(curfile)
-    createStmts, insertStmts, selectStmts = computeMetrics(contents)
+    createStmts, insertStmts, selectStmts, updateStmts = computeMetrics(contents)
 
-    writeFile(resultFile, file + "," + str(selectStmts) + "," + str(createStmts) + "," + str(insertStmts))
+    writeFile(resultFile, file + "," + str(selectStmts) + "," + str(createStmts) + "," + str(insertStmts) + "," + str(updateStmts))
 
 
 def computeMetrics(contents):
@@ -38,4 +38,11 @@ def computeMetrics(contents):
                          contents, re.IGNORECASE)
     if (result3 != None):
         insertStmts = len(result3)
-    return createStmts, insertStmts, selectStmts
+    updateStmts = 0
+    result4 = re.findall(r'("update\s\w+\sset\s*(.+?\n?)*?(where\s.+?)")|(update\s\w+\sset\s*(.+?\n?)*?(where\s.+?);)',
+                         contents, re.IGNORECASE)
+    if (result4 != None):
+        updateStmts = len(result4)
+
+
+    return createStmts, insertStmts, selectStmts, updateStmts

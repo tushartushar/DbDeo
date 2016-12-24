@@ -10,3 +10,4 @@ INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
  
 SELECT * FROM Products WHERE account_id REGEXP '[[:<:]]12[[:>:]]';
 INSERT INTO Products (product_id, product_name, account_id) VALUES (DEFAULT, 'Visual TurboBuilder', '12,34,banana');
+UPDATE Products SET account_id = account_id || ',' || 56 WHERE product_id = 123;

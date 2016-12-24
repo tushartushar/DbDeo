@@ -3,7 +3,7 @@ import MetricsCalculator
 
 repoStoreRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/resultRepos/"
 resultFile = repoStoreRoot + "metrics.csv"
-MetricsCalculator.writeFile(resultFile, "repo,selectStmtCount,createStmtCount,insertStmtCount")
+MetricsCalculator.writeFile(resultFile, "repo,selectStmtCount,createStmtCount,insertStmtCount,updateStmtCount")
 
 for file in os.listdir(repoStoreRoot):
     if file.endswith(".sql"):

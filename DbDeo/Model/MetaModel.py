@@ -3,13 +3,14 @@ from Model.CreateStmt import CreateStmt
 from Model.InsertStmt import InsertStmt
 from Model.SQLStmtType import SQLStmtType
 from Utils import FileUtils
-
+from Model.UpdateStmt import UpdateStmt
 
 class MetaModel(object):
     def __init__(self):
         self.selectStmtList = []
         self.createStmtList = []
         self.insertStmtList = []
+        self.updateStmtList = []
 
     def prepareMetaModel(self, file, logFile):
         FileUtils.log(logFile, "Processing " + str(file))
@@ -34,4 +35,9 @@ class MetaModel(object):
             insertStmt = InsertStmt(parsedStmt)
             insertStmt.populate()
             self.insertStmtList.append(insertStmt)
+            return
+        if(parsedStmt.getStmtType()==SQLStmtType.UPDATE):
+            updateStmt = UpdateStmt(parsedStmt)
+            updateStmt.populate()
+            self.updateStmtList.append(updateStmt)
             return
