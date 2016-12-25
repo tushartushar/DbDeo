@@ -1,6 +1,8 @@
 import os
 from Utils import FileUtils
 from DbSmellDetector import Constants
+import re
+
 
 class SmellDetector(object):
     def __init__(self, metaModel, resultRoot, file):
@@ -15,6 +17,7 @@ class SmellDetector(object):
         self.detectGodTable()
         self.detectValuesInColDef()
         self.detectMetadataAsData()
+        self.detectMulticolumnAttribute()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -63,3 +66,23 @@ class SmellDetector(object):
             if varCharColumnCount >= 2:
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.METADATA_AS_DATA
                                     + " Found in following statement: " + createStmt.parsedStmt.stmt)
+
+    def detectMulticolumnAttribute(self):
+        for createStmt in self.metaModel.createStmtList:
+            found = False
+            for columnObj in createStmt.columnList:
+                m = re.search(r'([a-zA-Z_]+)d*', columnObj.columnName)
+                if not m == None:
+                    if not m.group(1) == None:
+                        #search the similar column name that only differs in the number
+                        for colObj in createStmt.columnList:
+                            if not columnObj == colObj:
+                                searchStr = r'(' + m.group(1) + ')\d+'
+                                k = re.search(searchStr, colObj.columnName)
+                                if not k == None:
+                                    FileUtils.writeFile(self.resultFile, "Detected: " + Constants.MULTICOLUMN_ATTRIBUTE
+                                        + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                    found = True
+                                    break
+                if found:
+                    break

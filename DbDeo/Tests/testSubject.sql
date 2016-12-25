@@ -15,3 +15,4 @@ CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED,
 CREATE TABLE Bugs (comment_id SERIAL PRIMARY KEY, clob_value clob, status VARCHAR(20) CHECK (status IN ('NEW', 'IN PROGRESS', 'FIXED')) );
 
 CREATE TABLE IssueAttributes (  issue_id    BIGINT UNSIGNED NOT NULL,  attr_name   VARCHAR(100) NOT NULL,  attr_value  VARCHAR(100),  PRIMARY KEY (issue_id, attr_name), FOREIGN KEY (issue_id) REFERENCES Issues(issue_id));
+CREATE TABLE Bugs (        bug_id      SERIAL PRIMARY KEY,        description VARCHAR(1000),        tag1        VARCHAR(20),        tag2        VARCHAR(20), tag3        VARCHAR(20));

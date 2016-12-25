@@ -4,6 +4,8 @@ ADJACENCY_LIST = "Adjacency List"
 GOD_TABLE = "God Table"
 VALUES_IN_COLUMN_DEFINION = "Values in Column Definition"
 METADATA_AS_DATA = "Metadata as Data"
+MULTICOLUMN_ATTRIBUTE = "Multicolumn Attribute"
+
 
 #Thresholds
 GOD_TABLE_MAX_COLUMN_THRESHOLD = 10
