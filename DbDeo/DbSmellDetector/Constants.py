@@ -1,6 +1,9 @@
+#Smell names
 COMPOUND_ATTRIBUTE_SMELL = "Compound Attribute"
 ADJACENCY_LIST = "Adjacency List"
 GOD_TABLE = "God Table"
 VALUES_IN_COLUMN_DEFINION = "Values in Column Definition"
+METADATA_AS_DATA = "Metadata as Data"
 
+#Thresholds
 GOD_TABLE_MAX_COLUMN_THRESHOLD = 10

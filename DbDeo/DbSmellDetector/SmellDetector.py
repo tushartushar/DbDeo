@@ -14,6 +14,7 @@ class SmellDetector(object):
         self.detectAdjacencyList()
         self.detectGodTable()
         self.detectValuesInColDef()
+        self.detectMetadataAsData()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -48,4 +49,17 @@ class SmellDetector(object):
             for columnObj in createStmt.columnList:
                 if columnObj.areValuesConstrained:
                     FileUtils.writeFile(self.resultFile, "Detected: " + Constants.VALUES_IN_COLUMN_DEFINION
+                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+
+    def detectMetadataAsData(self):
+        for createStmt in self.metaModel.createStmtList:
+            if not createStmt.getColumnCount() == 3:
+                continue
+            varCharColumnCount =0
+            for columnObj in createStmt.columnList:
+                if not columnObj.isConstraint:
+                    if 'VARCHAR' in columnObj.columnType.upper():
+                        varCharColumnCount += 1
+            if varCharColumnCount >= 2:
+                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.METADATA_AS_DATA
                                     + " Found in following statement: " + createStmt.parsedStmt.stmt)

@@ -215,21 +215,32 @@ class SQLParse(object):
     def extract_definitions(self, token_list):
         definitions = []
         curDef = []
+        paranthesis_depth = 0
         for token in token_list:
-            if token.value == '(' or token.value == ')':
+            if token.value == '(':
+                paranthesis_depth += 1
+                continue
+            if token.value == ')':
+                paranthesis_depth -= 1
                 continue
             if token.is_group:
                 for node in token.tokens:
                     if node.value == ',':
-                        if not curDef == []:
-                            definitions.append(curDef)
-                            curDef = []
+                        if paranthesis_depth <= 1:
+                            if not curDef == []:
+                                definitions.append(curDef)
+                                curDef = []
+                        else:
+                            curDef.append(node)
                     else:
                         curDef.append(node)
             elif token.value == ',':
-                if not curDef == []:
-                    definitions.append(curDef)
-                    curDef = []
+                if paranthesis_depth <= 1:
+                    if not curDef == []:
+                        definitions.append(curDef)
+                        curDef = []
+                else:
+                    curDef.append(token)
             else:
                 curDef.append(token)
         if not curDef == []:
