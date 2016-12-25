@@ -9,6 +9,7 @@ class TableColumn(object):
         self.referencedTable = ""
         self.referencedColumn = ""
         self.isConstraint = False
+        self.areValuesConstrained = False
         self.populate()
 
     def populate(self):
@@ -36,6 +37,8 @@ class TableColumn(object):
                 self.referencedColumn = item.value
             elif item.value.upper() == 'NOT NULL':
                 self.isNotNull = True
+            elif item.value.upper() == 'CHECK' or item.value.upper() == 'ENUM':
+                self.areValuesConstrained = True
             elif not name_seen:
                 self.columnName = item.value
                 name_seen = True

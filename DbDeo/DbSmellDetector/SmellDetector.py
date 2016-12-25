@@ -13,6 +13,7 @@ class SmellDetector(object):
         self.detectCompoundAttribute()
         self.detectAdjacencyList()
         self.detectGodTable()
+        self.detectValuesInColDef()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -40,4 +41,11 @@ class SmellDetector(object):
         for createStmt in self.metaModel.createStmtList:
             if createStmt.getColumnCount() > Constants.GOD_TABLE_MAX_COLUMN_THRESHOLD:
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.GOD_TABLE
+                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+
+    def detectValuesInColDef(self):
+        for createStmt in self.metaModel.createStmtList:
+            for columnObj in createStmt.columnList:
+                if columnObj.areValuesConstrained:
+                    FileUtils.writeFile(self.resultFile, "Detected: " + Constants.VALUES_IN_COLUMN_DEFINION
                                     + " Found in following statement: " + createStmt.parsedStmt.stmt)

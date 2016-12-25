@@ -12,3 +12,4 @@ SELECT * FROM Products WHERE account_id REGEXP '[[:<:]]12[[:>:]]';
 INSERT INTO Products (product_id, product_name, account_id) VALUES (DEFAULT, 'Visual TurboBuilder', '12,34,banana');
 UPDATE Products SET account_id = account_id || ',' || 56 WHERE product_id = 123;
 CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED, comment TEXT NOT NULL, FOREIGN KEY (parent_id) REFERENCES Comments(comment_id));
+CREATE TABLE Bugs (comment_id SERIAL PRIMARY KEY, clob_value clob, status VARCHAR(20) CHECK (status IN ('NEW', 'IN PROGRESS', 'FIXED')) );

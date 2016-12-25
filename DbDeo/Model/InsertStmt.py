@@ -8,5 +8,7 @@ class InsertStmt(object):
     def isContainsCompoundAttribute(self):
         for token in self.valueList:
             if ',' in token.value:
-                return True
+                #This check is required to eliminate false positives where a method is used such as TO_DATE('23-01-1982', 'DD-MM-YYYY')
+                if not ('(' in token.value or ')' in token.value):
+                    return True
         return False
