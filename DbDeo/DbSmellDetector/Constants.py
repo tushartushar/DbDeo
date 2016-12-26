@@ -6,6 +6,7 @@ VALUES_IN_COLUMN_DEFINION = "Values in Column Definition"
 METADATA_AS_DATA = "Metadata as Data"
 MULTICOLUMN_ATTRIBUTE = "Multicolumn Attribute"
 CLONE_TABLES = "Clone Tables"
+DUPLICATE_COLUMN_NAMES = "Duplicate Column Names"
 
 #Thresholds
 GOD_TABLE_MAX_COLUMN_THRESHOLD = 10

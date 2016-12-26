@@ -19,6 +19,7 @@ class SmellDetector(object):
         self.detectMetadataAsData()
         self.detectMulticolumnAttribute()
         self.detectCloneTables()
+        self.detectDuplicateColumnNames()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -101,3 +102,27 @@ class SmellDetector(object):
                             if not k == None:
                                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.CLONE_TABLES
                                         + " Found in following statement: " + createStmt.parsedStmt.stmt)
+
+    def detectDuplicateColumnNames(self):
+        listOfDuplicates = []
+        for createStmt in self.metaModel.createStmtList:
+            for columnObj in createStmt.columnList:
+                if columnObj.isConstraint:
+                    continue
+                #Now, look for the similar column in all the column definitions
+                for ctStmt in self.metaModel.createStmtList:
+                    for colObj in ctStmt.columnList:
+                        if colObj.isConstraint:
+                            continue
+                        if not colObj == columnObj:
+                            if colObj.columnName == columnObj.columnName:
+                                if not colObj.shortColumnType == columnObj.shortColumnType:
+                                    if not (colObj in listOfDuplicates or columnObj in listOfDuplicates):
+                                        FileUtils.writeFile(self.resultFile, "Detected: " + Constants.DUPLICATE_COLUMN_NAMES
+                                        + " Found in following statement: " + createStmt.parsedStmt.stmt +
+                                                            " in following column " + columnObj.columnName +
+                                                            " and in column " + colObj.columnName + " of table " + ctStmt.tableName)
+                                    if not colObj in listOfDuplicates:
+                                        listOfDuplicates.append(colObj)
+                                    if not columnObj in listOfDuplicates:
+                                        listOfDuplicates.append(columnObj)
