@@ -18,6 +18,7 @@ class SmellDetector(object):
         self.detectValuesInColDef()
         self.detectMetadataAsData()
         self.detectMulticolumnAttribute()
+        self.detectCloneTables()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -86,3 +87,17 @@ class SmellDetector(object):
                                     break
                 if found:
                     break
+
+    def detectCloneTables(self):
+        for createStmt in self.metaModel.createStmtList:
+            m = re.search(r'([a-zA-Z_]+)d*', createStmt.tableName)
+            if not m == None:
+                if not m.group(1) == None:
+                    #search the similar table names that only differs in the number
+                    for cTableStmt in self.metaModel.createStmtList:
+                        if not createStmt == cTableStmt:
+                            searchStr = r'(' + m.group(1) + ')\d+'
+                            k = re.search(searchStr, cTableStmt.tableName)
+                            if not k == None:
+                                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.CLONE_TABLES
+                                        + " Found in following statement: " + createStmt.parsedStmt.stmt)

@@ -3,8 +3,8 @@ select ename from emp order by ename;
 select empno id, ename employee, sal Salary, comm commission from emp where job = ''MANAGER'' and sal > 2000', dbms_sql.native );
 "select * from sample where x > 3"
 
-create table x_dump(clob_value clob, dump_date date default sysdate, dump_id number);
-create table x_dump(clob_value clob, dump_date date default sysdate, dump_id number, clob_value2 clob, dump_date2 date default sysdate, dump_id2 number, clob_value3 clob, dump_date3 date default sysdate, dump_id3 number, clob_value4 clob, dump_date4 date default sysdate, dump_id4 number);
+create table x_dump2000(clob_value clob, dump_date date default sysdate, dump_id number);
+create table x_dump2001(clob_value clob, dump_date date default sysdate, dump_id number, clob_value2 clob, dump_date2 date default sysdate, dump_id2 number, clob_value3 clob, dump_date3 date default sysdate, dump_id3 number, clob_value4 clob, dump_date4 date default sysdate, dump_id4 number);
 INSERT INTO EMP VALUES(7934, 'MILLER', 'CLERK', 7782,TO_DATE('23-01-1982', 'DD-MM-YYYY'), 1300, NULL, 10);
 INSERT INTO DEPT VALUES (10, 'ACCOUNTING', 'NEW YORK');
 
