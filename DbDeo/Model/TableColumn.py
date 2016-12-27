@@ -9,9 +9,9 @@ class TableColumn(object):
         self.isNotNull = False
         self.isReferences = False
         self.referencedTable = ""
-        self.referencedColumn = ""
         self.isConstraint = False
         self.areValuesConstrained = False
+        self.referencedColumnList = []
         self.populate()
         self.shortColumnType = "" #This field captures the precise data type removing extra information present in columnType
         self.extractColumnShortType()
@@ -23,6 +23,8 @@ class TableColumn(object):
         for item in self.parsedColumn:
             if item.is_whitespace or item.value == '(' or item.value == ')' or item.value.upper() == 'KEY':
                 continue
+            if self.isPrimaryKey and self.isConstraint:
+                self.referencedColumnList.append(item.value)
             if item.value.upper() == 'PRIMARY':
                 self.isPrimaryKey = True
                 if not name_seen:
@@ -38,9 +40,7 @@ class TableColumn(object):
                 self.referencedTable = item.value
                 ref_table_seen = True
             elif ref_table_seen:
-                if not self.referencedColumn == "":
-                    self.referencedColumn += " "
-                self.referencedColumn = item.value
+                self.referencedColumnList.append(item.value)
             elif item.value.upper() == 'NOT NULL':
                 self.isNotNull = True
             elif item.value.upper() == 'CHECK' or item.value.upper() == 'ENUM':

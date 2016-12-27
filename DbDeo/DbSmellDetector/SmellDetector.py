@@ -20,6 +20,7 @@ class SmellDetector(object):
         self.detectMulticolumnAttribute()
         self.detectCloneTables()
         self.detectDuplicateColumnNames()
+        self.detectIndexShotgun()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -126,3 +127,15 @@ class SmellDetector(object):
                                         listOfDuplicates.append(colObj)
                                     if not columnObj in listOfDuplicates:
                                         listOfDuplicates.append(columnObj)
+
+    def detectIndexShotgun(self):
+        if len(self.metaModel.createIndexStmtList) == 0:
+            FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 1")
+        #detecting variant 2: Insufficient indexes
+        keyList = self.metaModel.getKeyList() #keyList will contain 'table name, attribute name in (primary/foreign) key' tuples
+        indexList = self.metaModel.getAllIndexList() #indexList will contain 'table name, attribute' tuple
+        for keyItem in keyList:
+            if not keyItem in indexList:
+                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 2"
+                                        + " Missing index for the primary/foreign key : " + str(keyItem))
+

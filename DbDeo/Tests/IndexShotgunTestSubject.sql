@@ -1,0 +1,2 @@
+CREATE TABLE IssueAttributes ( issue_id BIGINT UNSIGNED NOT NULL, attr_name VARCHAR(100) NOT NULL, attr_value VARCHAR(100), PRIMARY KEY (issue_id, attr_name), FOREIGN KEY (issue_id) REFERENCES Issues(issue_id));
+create index index_name ON IssueAttributes (issue_id)

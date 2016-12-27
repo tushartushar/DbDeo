@@ -6,3 +6,4 @@ class SQLStmtType(Enum):
     CREATE = 2
     INSERT = 3
     UPDATE = 4
+    CREATE_INDEX = 5

@@ -4,6 +4,7 @@ from Model import SQLParse
 from Model.SQLStmtType import SQLStmtType
 from Model.SelectStmt import SelectStmt
 from Model.CreateStmt import CreateStmt
+from Model.CreateIndexStmt import CreateIndexStmt
 
 class ParseTests(TestCase):
     def test_checkStmtType_select(self):
@@ -28,12 +29,10 @@ class ParseTests(TestCase):
         selectStmt.populate()
         self.assertEqual(selectStmt.getReferencedTables(), ['emp'])
 
-    # ##def test_selectedColumns_in_select(self):
-    #     sqlStmt = "select empno id, ename employee, sal Salary, comm commission from emp where job = ''MANAGER'' and sal > 2000', dbms_sql.native );"
-    #     parseObj = SQLParse.SQLParse(sqlStmt)
-    #     selectStmt = SelectStmt(parseObj)
-    #     selectStmt.populate()
-    #     self.assertEqual(selectStmt.getReferencedColumns(), ['empno id, ename employee, sal Salary, comm commission'])##
+    def test_checkStmtType_createIndex(self):
+        sqlStmt = "create index pIndex ON Persons (LastName, FirstName)"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        self.assertEqual(parseObj.getStmtType(), SQLStmtType.CREATE_INDEX)
 
     def test_where_in_select(self):
         sqlStmt = "select empno id, ename employee, sal Salary, comm commission from emp where job = ''MANAGER'' and sal > 2000"
@@ -62,3 +61,17 @@ class ParseTests(TestCase):
         createStmt = CreateStmt(parseObj)
         createStmt.populate()
         self.assertEqual(createStmt.getColumnCount(), 3)
+
+    def test_table_name_in_createIndex(self):
+        sqlStmt = "create index pIndex ON Persons (LastName, FirstName)"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createIndexStmt = CreateIndexStmt(parseObj)
+        createIndexStmt.populate()
+        self.assertEqual(createIndexStmt.tableName, 'Persons')
+
+    def test_columnList_in_createIndex(self):
+        sqlStmt = "create index pIndex ON Persons (LastName, FirstName)"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createIndexStmt = CreateIndexStmt(parseObj)
+        createIndexStmt.populate()
+        self.assertEqual(createIndexStmt.indexColumnList, ['LastName', 'FirstName'])

@@ -16,11 +16,17 @@ class SQLParse(object):
             print("Token: " + str(token) + " \nType: " + str(token.ttype) + " \nStmt type: " + str(token.value.upper))
 
     def knowStmtType(self):
+        create_seen = False
         for token in self.parsed:
             if token.ttype is DML and token.value.upper() == 'SELECT':
                 return SQLStmtType.SELECT
             if token.ttype is DDL and token.value.upper() == 'CREATE':
+                create_seen = True
+                continue
+            if token.ttype is Keyword and token.value.upper() == 'TABLE' and create_seen:
                 return SQLStmtType.CREATE
+            if token.ttype is Keyword and token.value.upper() == 'INDEX' and create_seen:
+                return SQLStmtType.CREATE_INDEX
             if token.ttype is DML and token.value.upper() == 'INSERT':
                 return SQLStmtType.INSERT
             if token.ttype is DML and token.value.upper() == 'UPDATE':
@@ -166,6 +172,23 @@ class SQLParse(object):
                     create_seen = True
         return ""
 
+    def getTableNameInCreateIndex(self):
+        on_seen = False
+        for token in self.parsed.tokens:
+            if on_seen:
+                if not token.value == ' ':
+                    if token.is_group:
+                        for item in token.tokens:
+                            return item.value
+                    else:
+                        return token.value
+            else:
+                b1 = token.is_keyword
+                b2 = token.value.upper() == 'ON'
+                if b1 and b2:
+                    on_seen = True
+        return ""
+
     def getColumnDefinitionExpn(self):
         result = []
         create_seen = False
@@ -253,3 +276,26 @@ class SQLParse(object):
             tableColumn = TableColumn(column)
             columnObjs.append(tableColumn)
         return columnObjs
+
+    def getIndexColumnList(self):
+        on_seen = False
+        name_seen = False
+        columnList = []
+        for token in self.parsed.tokens:
+            if on_seen:
+                if not token.value == ' ':
+                    if token.is_group:
+                        for item in token.flatten():
+                            if not name_seen:
+                                name_seen = True
+                                continue
+                            if not (item.value == ' ' or item.value == '(' or item.value == ')' or item.value == ','):
+                                columnList.append(item.value)
+                    else:
+                        name_seen = True
+            else:
+                b1 = token.is_keyword
+                b2 = token.value.upper() == 'ON'
+                if b1 and b2:
+                    on_seen = True
+        return columnList
