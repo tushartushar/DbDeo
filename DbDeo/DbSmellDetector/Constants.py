@@ -8,6 +8,7 @@ MULTICOLUMN_ATTRIBUTE = "Multicolumn Attribute"
 CLONE_TABLES = "Clone Tables"
 DUPLICATE_COLUMN_NAMES = "Duplicate Column Names"
 INDEX_SHOTGUN = "Index Shotgun"
+OBSOLETE_COLUMN_TYPES = "Obsolete Column Types"
 
 #Thresholds
 GOD_TABLE_MAX_COLUMN_THRESHOLD = 10

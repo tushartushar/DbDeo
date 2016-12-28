@@ -78,3 +78,7 @@ class SmellTests(TestCase):
     def test_indexShotgun_variant3_negative(self):
         contents = self.prepareTest()
         self.assertNotIn("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3", contents)
+    
+    def test_ObsoleteColumnTypes(self):
+        contents = self.prepareTest()
+        self.assertIn("Detected: " + Constants.OBSOLETE_COLUMN_TYPES, contents)

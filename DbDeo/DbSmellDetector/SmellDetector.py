@@ -2,7 +2,7 @@ import os
 from Utils import FileUtils
 from DbSmellDetector import Constants
 import re
-
+import Model.DataTypeConstants as Datatypes
 
 class SmellDetector(object):
     def __init__(self, metaModel, resultRoot, file):
@@ -21,6 +21,7 @@ class SmellDetector(object):
         self.detectCloneTables()
         self.detectDuplicateColumnNames()
         self.detectIndexShotgun()
+        self.detectObsoleteColumnTypes()
 
     def detectCompoundAttribute(self):
         for selectStmt in self.metaModel.selectStmtList:
@@ -153,3 +154,19 @@ class SmellDetector(object):
             if not index in usedAttributesInAllSelect:
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3"
                                     + " Following index not used : " + str(index))
+
+    def detectObsoleteColumnTypes(self):
+        listOfObsoletes = []
+        for createStmt in self.metaModel.createStmtList:
+            for columnObj in createStmt.columnList:
+                shortType = columnObj.shortColumnType
+                if shortType == Datatypes.TEXT or shortType == Datatypes.NTEXT:
+                    FileUtils.writeFile(self.resultFile, "Detected: " +
+                            Constants.OBSOLETE_COLUMN_TYPES +
+                            "Found in following statement: " +
+                            createStmt.parsedStmt.stmt +
+                            " in following column " + columnObj.columnName +
+                            " of table " + createStmt.tableName)
+                    if not columnObj in listOfObsoletes:
+                        listOfObsoletes.append(columnObj)
+
