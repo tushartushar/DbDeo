@@ -1,3 +1,3 @@
 CREATE TABLE IssueAttributes ( issue_id BIGINT UNSIGNED NOT NULL, attr_name VARCHAR(100) NOT NULL, attr_value VARCHAR(100), PRIMARY KEY (issue_id, attr_name), FOREIGN KEY (issue_id) REFERENCES Issues(issue_id));
 create index index_name ON IssueAttributes (issue_id)
-"SELECT a.name, a.description, a.speed, b.name AS router FROM IssueAttributes a, router b WHERE a.rid=b.rid AND a.rid=$rid AND a.id=$iid[0]"
+"SELECT a.name, a.description, a.speed, b.name AS router FROM IssueAttributes a, router b WHERE a.rid=b.rid AND a.issue_id=$rid AND a.id=$iid[0]"

@@ -151,3 +151,27 @@ class SmellTests(TestCase):
         smellDetector.detectAllDbSmells()
         contents = FileUtils.readFileContents(root + "temp/IndexShotgunTestSubject.txt")
         self.assertIn("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 2", contents)
+
+    def test_indexShotgun_variant3(self):
+        root = "/Users/Tushar/Documents/Research/dbSmells/DbDeo/DbDeo/Tests/"
+        file = "IndexShotgunTestSubject.sql"
+        metaModel = MetaModel()
+        metaModel.prepareMetaModel(root + file, root + "log.txt")
+        smellDetector = SmellDetector(metaModel, root + "temp/", file)
+        if (os.path.isfile(root + "temp/IndexShotgunTestSubject.txt")):
+            os.remove(root + "temp/IndexShotgunTestSubject.txt")
+        smellDetector.detectAllDbSmells()
+        contents = FileUtils.readFileContents(root + "temp/IndexShotgunTestSubject.txt")
+        self.assertIn("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3", contents)
+
+    def test_indexShotgun_variant3_negative(self):
+        root = "/Users/Tushar/Documents/Research/dbSmells/DbDeo/DbDeo/Tests/"
+        file = "IndexShotgunTestSubject_negative.sql"
+        metaModel = MetaModel()
+        metaModel.prepareMetaModel(root + file, root + "log.txt")
+        smellDetector = SmellDetector(metaModel, root + "temp/", file)
+        if (os.path.isfile(root + "temp/IndexShotgunTestSubject_negative.txt")):
+            os.remove(root + "temp/IndexShotgunTestSubject_negative.txt")
+        smellDetector.detectAllDbSmells()
+        contents = FileUtils.readFileContents(root + "temp/IndexShotgunTestSubject_negative.txt")
+        self.assertNotIn("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3", contents)

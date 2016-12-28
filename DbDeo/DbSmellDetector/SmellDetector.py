@@ -129,13 +129,27 @@ class SmellDetector(object):
                                         listOfDuplicates.append(columnObj)
 
     def detectIndexShotgun(self):
-        if len(self.metaModel.createIndexStmtList) == 0:
-            FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 1")
-        #detecting variant 2: Insufficient indexes
-        keyList = self.metaModel.getKeyList() #keyList will contain 'table name, attribute name in (primary/foreign) key' tuples
-        indexList = self.metaModel.getAllIndexList() #indexList will contain 'table name, attribute' tuple
+        self.detectIndexShotgun_variant1()
+        self.detectIndexShotgun_variant2()
+        self.detectIndexShotgun_variant3()
+
+    def detectIndexShotgun_variant2(self):
+        # detecting variant 2: Insufficient indexes
+        keyList = self.metaModel.getKeyList()  # keyList will contain 'table name, attribute name in (primary/foreign) key' tuples
+        indexList = self.metaModel.getAllIndexList()  # indexList will contain 'table name, attribute' tuple
         for keyItem in keyList:
             if not keyItem in indexList:
                 FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 2"
-                                        + " Missing index for the primary/foreign key : " + str(keyItem))
+                                    + " Missing index for the primary/foreign key : " + str(keyItem))
 
+    def detectIndexShotgun_variant1(self):
+        if len(self.metaModel.createIndexStmtList) == 0:
+            FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 1")
+
+    def detectIndexShotgun_variant3(self):
+        usedAttributesInAllSelect = self.metaModel.getAllAttributeUsedInSelect()
+        indexList = self.metaModel.getAllIndexList()
+        for index in indexList:
+            if not index in usedAttributesInAllSelect:
+                FileUtils.writeFile(self.resultFile, "Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3"
+                                    + " Following index not used : " + str(index))

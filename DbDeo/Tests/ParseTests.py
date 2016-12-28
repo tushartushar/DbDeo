@@ -75,3 +75,17 @@ class ParseTests(TestCase):
         createIndexStmt = CreateIndexStmt(parseObj)
         createIndexStmt.populate()
         self.assertEqual(createIndexStmt.indexColumnList, ['LastName', 'FirstName'])
+
+    def test_substitute_list_from(self):
+        sqlStmt = "SELECT a.name, a.description, a.speed, b.name AS router FROM IssueAttributes a, router b WHERE a.rid=b.rid AND a.rid=$rid AND a.id=$iid[0]"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        selectStmt = SelectStmt(parseObj)
+        selectStmt.populate()
+        self.assertEqual(selectStmt.fromSubstituteList, {'a': 'IssueAttributes', 'b': 'router'})
+
+    def test_from_table_list_in_select(self):
+        sqlStmt = "SELECT a.name, a.description, a.speed, b.name AS router FROM IssueAttributes a, router b WHERE a.rid=b.rid AND a.rid=$rid AND a.id=$iid[0]"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        selectStmt = SelectStmt(parseObj)
+        selectStmt.populate()
+        self.assertEqual(selectStmt.fromTableList, ['IssueAttributes', 'router'])

@@ -108,6 +108,25 @@ class SQLParse(object):
             expnList.append(curExpn.strip())
         return expnList
 
+    def extractAttributesInWhere(self):
+        whereExpn = self.traverseForWhere()
+        resultList = []
+        curResult = ""
+        for item in whereExpn:
+            for token in item.flatten():
+                if token.value == ' ':
+                    continue
+                if token.value.upper() in ['==', '=', '>', '>=', '<', '<=', '<>', 'LIKE', 'BETWEEN', 'IN'] or token.is_keyword:
+                    if not curResult =="":
+                        resultList.append(curResult)
+                        curResult =""
+                    continue
+                else:
+                    curResult += token.value
+        if not curResult == "":
+            resultList.append(curResult)
+        return resultList
+
     def getInsertedValues(self):
         values_seen = False
         values = []
@@ -299,3 +318,64 @@ class SQLParse(object):
                 if b1 and b2:
                     on_seen = True
         return columnList
+
+    def populateFromSubstituteList(self):
+        from_seen = False
+        resultList = dict()
+        curTable = ""
+        curSub = ""
+        curTable_seen = False
+        for token in self.parsed.tokens:
+            for item in token.flatten():
+                if (item.value == ' ' or item.value == '(' or item.value == ')'):
+                    continue
+                if from_seen:
+                    if item.is_keyword:
+                        if (not curTable == "") and (not curSub == ""):
+                            resultList[curSub] = curTable
+                            curTable = ""
+                            curSub = ""
+                            curTable_seen = False
+                        return resultList
+                    if item.value == ',':
+                        if (not curTable == "") and (not curSub == ""):
+                            resultList[curSub] = curTable
+                            curTable = ""
+                            curSub = ""
+                            curTable_seen = False
+                    elif curTable_seen:
+                        curSub = item.value
+                    else:
+                        curTable = item.value
+                        curTable_seen = True
+                else:
+                    b1 = item.is_keyword
+                    b2 = item.value.upper() == 'FROM'
+                    if b1 and b2:
+                        from_seen = True
+        return resultList
+
+    def populateFromTableList(self):
+        from_seen = False
+        resultList = []
+        curTable_seen = False
+        for token in self.parsed.tokens:
+            for item in token.flatten():
+                if (item.value == ' ' or item.value == '(' or item.value == ')'):
+                    continue
+                if from_seen:
+                    if item.is_keyword:
+                        return resultList
+                    if item.value == ',':
+                        curTable_seen = False
+                    elif curTable_seen:
+                        continue
+                    else:
+                        resultList.append(item.value)
+                        curTable_seen = True
+                else:
+                    b1 = item.is_keyword
+                    b2 = item.value.upper() == 'FROM'
+                    if b1 and b2:
+                        from_seen = True
+        return resultList

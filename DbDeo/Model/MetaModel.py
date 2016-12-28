@@ -62,3 +62,9 @@ class MetaModel(object):
             for indexCol in index.indexColumnList:
                 indexList.append([index.tableName, indexCol])
         return indexList
+
+    def getAllAttributeUsedInSelect(self):
+        result = []
+        for select in self.selectStmtList:
+            result.extend(select.attributesInWhereList)
+        return result
