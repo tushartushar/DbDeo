@@ -34,8 +34,11 @@ class SelectStmt(object):
             if '.' in attr:
                 m = re.search('(\w+)\.(\w+)', attr)
                 if m:
-                    if not self.fromSubstituteList[m.group(1)] == None:
-                        list.append([self.fromSubstituteList[m.group(1)], m.group(2)])
+                    if len(self.fromSubstituteList) > 0:
+                        if not self.fromSubstituteList[m.group(1)] == None:
+                            list.append([self.fromSubstituteList[m.group(1)], m.group(2)])
+                        else:
+                            list.append([m.group(1), m.group(2)])
                     else:
                         list.append([m.group(1), m.group(2)])
             else:
