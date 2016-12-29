@@ -21,8 +21,8 @@ def downloadRepo(github, repoName, repoStoreRoot, logFile):
             pass
 
 
-repoInputFile = "/home/tushar/SQLRepoDownload/reposWithScore10.csv"
-repoStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos10/"
+repoInputFile = "/home/tushar/DbDeo/SQLRepoDownload/reposWithScore10.csv"
+repoStoreRoot = "/home/tushar/DbDeo/SQLRepoDownload/selectedRepos10/"
 repoTempStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos/"
 logFile = repoStoreRoot + "log.txt"
 
@@ -35,7 +35,10 @@ for line in file.readlines():
         folderName = repoName.replace("/", "_")
         if(os.path.isdir(os.path.join(repoTempStoreRoot, folderName))):
             FileUtils.log(logFile, "Copying from temporary store " + folderName)
-            shutil.copytree(os.path.join(repoTempStoreRoot, folderName), os.path.join(repoStoreRoot, folderName))
+            try:
+                shutil.copytree(os.path.join(repoTempStoreRoot, folderName), os.path.join(repoStoreRoot, folderName))
+            except:
+                pass
         else:
             fullFolderPath = os.path.join(repoStoreRoot, folderName)
             downloadRepo(g, repoName, repoStoreRoot, logFile)
@@ -43,6 +46,6 @@ for line in file.readlines():
                 if(os.path.isdir(fullFolderPath)):
                     FileUtils.log(logFile, "Deleting " + fullFolderPath)
                     shutil.rmtree(fullFolderPath)
-    n = random.randint(10,60)
-    FileUtils.log(logFile, "Waiting for " + str(n) + " secs")
-    time.sleep(n)
+            n = random.randint(10,60)
+            FileUtils.log(logFile, "Waiting for " + str(n) + " secs")
+            time.sleep(n)
