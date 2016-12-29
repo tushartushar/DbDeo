@@ -160,7 +160,7 @@ class SmellDetector(object):
         for createStmt in self.metaModel.createStmtList:
             for columnObj in createStmt.columnList:
                 shortType = columnObj.shortColumnType
-                if shortType == Datatypes.TEXT or shortType == Datatypes.NTEXT:
+                if shortType == Datatypes.TEXT or shortType == Datatypes.NTEXT or shortType == Datatypes.FLOAT or shortType == Datatypes.REAL:
                     FileUtils.writeFile(self.resultFile, "Detected: " +
                             Constants.OBSOLETE_COLUMN_TYPES +
                             "Found in following statement: " +
