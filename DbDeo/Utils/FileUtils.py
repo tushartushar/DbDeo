@@ -3,17 +3,15 @@ import datetime
 import time
 
 def writeFile(fileName, text):
-    f = open(fileName, "a", errors='ignore')
-    f.write(text + "\n")
-    f.close()
+    with open(fileName, "a", errors='ignore') as f:
+        f.write(text + "\n")
 
 def readFileContents(fileName):
-    if(os.path.exists(fileName)):
-        f = open(fileName, "r+", errors='ignore')
-        return f.read()
+    if (os.path.exists(fileName)):
+        with open(fileName, "r+", errors='ignore') as f:
+            return f.read()
     return ""
 
 def log(fileName, line):
-    f = open(fileName, "a", errors='ignore')
-    f.write(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " " + line + "\n")
-    f.close()
+    with open(fileName, "a", errors='ignore') as f:
+        f.write(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S') + " " + line + "\n")
