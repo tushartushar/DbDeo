@@ -1,6 +1,7 @@
 class UpdateStmt(object):
     def __init__(self, parsedStmt):
         self.parsedStmt = parsedStmt
+        self.setExpn = ""
 
     def populate(self):
         self.setExpn = self.parsedStmt.getSetExpn()

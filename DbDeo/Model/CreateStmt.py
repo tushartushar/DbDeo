@@ -1,6 +1,8 @@
 class CreateStmt(object):
     def __init__(self, parsedStmt):
         self.parsedStmt = parsedStmt
+        self.tableName = ""
+        self.columnList = []
 
     def populate(self):
         self.tableName = self.parsedStmt.getTableName()

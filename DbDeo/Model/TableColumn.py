@@ -12,6 +12,7 @@ class TableColumn(object):
         self.isConstraint = False
         self.areValuesConstrained = False
         self.referencedColumnList = []
+        self.columnName =""
         self.populate()
         self.shortColumnType = "" #This field captures the precise data type removing extra information present in columnType
         self.extractColumnShortType()

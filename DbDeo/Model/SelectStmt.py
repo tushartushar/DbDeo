@@ -4,6 +4,10 @@ class SelectStmt(object):
     def __init__(self, parsedStmt):
         self.fromSubstituteList = None
         self.parsedStmt = parsedStmt
+        self.tables = []
+        self.whereConditionList = []
+        self.fromTableList = []
+        self.attributesInWhereList = []
 
     def populate(self):
         self.tables = self.parsedStmt.populateReferencedTables(self.parsedStmt.parsed)
@@ -34,13 +38,16 @@ class SelectStmt(object):
             if '.' in attr:
                 m = re.search('(\w+)\.(\w+)', attr)
                 if m:
-                    if len(self.fromSubstituteList) > 0:
-                        if not self.fromSubstituteList[m.group(1)] == None:
-                            list.append([self.fromSubstituteList[m.group(1)], m.group(2)])
+                    try:
+                        if len(self.fromSubstituteList) > 0:
+                            if not self.fromSubstituteList[m.group(1)] == None:
+                                list.append([self.fromSubstituteList[m.group(1)], m.group(2)])
+                            else:
+                                list.append([m.group(1), m.group(2)])
                         else:
                             list.append([m.group(1), m.group(2)])
-                    else:
-                        list.append([m.group(1), m.group(2)])
+                    except:
+                        pass
             else:
                 for table in self.fromTableList: #add all tables to avoid false positives
                     list.append([table, attr])

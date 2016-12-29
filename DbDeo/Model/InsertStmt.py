@@ -1,6 +1,7 @@
 class InsertStmt(object):
     def __init__(self, parsedStmt):
         self.parsedStmt = parsedStmt
+        self.valueList = []
 
     def populate(self):
         self.valueList = self.parsedStmt.getInsertedValues()
