@@ -27,7 +27,7 @@ def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
         files = [f for f in files if not f[0] == '.']
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for file in files:
-            print("Analyzing file " + str(root) + str(file))
+            print("Analyzing file " + str(root) + "/" + str(file))
             storeSQLStatements(logFile, os.path.join(root,file), resultRoot, dir, lines)
     resultFile = os.path.join(resultRoot, dir + ".sql")
     f = open(resultFile, "a", errors='ignore')
@@ -39,31 +39,31 @@ def storeSQLStatements(logFile, curfile, resultRoot, repoName, lines):
     resultFile = os.path.join(resultRoot, repoName + ".sql")
     contents = readFileContents(curfile)
 
-    for m in re.finditer(r'select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?("|;)', contents, re.IGNORECASE):
+    for m in re.finditer(r'("select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?")|(select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?;)', contents, re.IGNORECASE):
         query = m.group(0).replace("\n", "")
         log(logFile, "regex match: " + query)
         #writeFile(resultFile, query)
         lines.add(query)
 
-    for m in re.finditer(r'create\stable\s.+\s*\((.+?\s*)*?(;|")', contents, re.IGNORECASE + re.MULTILINE):
+    for m in re.finditer(r'create\stable\s.+?\s*\(.+?(;|")', contents, re.IGNORECASE | re.DOTALL):
         query = m.group(0).replace("\n", "")
         log(logFile, "regex match: " + query)
         #writeFile(resultFile, query)
         lines.add(query)
 
-    for m in re.finditer(r'insert\sinto\s\w+\svalues\s*(.+?\s*)*?(;|")', contents, re.IGNORECASE + re.MULTILINE):
+    for m in re.finditer(r'insert\sinto\s\w+\svalues\s*.+?(;|")', contents, re.IGNORECASE | re.DOTALL):
         query = m.group(0).replace("\n", "")
         log(logFile, "regex match: " + query)
         #writeFile(resultFile, query)
         lines.add(query)
 
-    for m in re.finditer(r'update\s\w+\sset\s*(\w+?\s*)*?(where\s*(.+?))("|;)', contents, re.IGNORECASE + re.MULTILINE):
+    for m in re.finditer(r'update\s\w+\sset\s*.+?\s*where\s*.+?("|;)', contents, re.IGNORECASE | re.DOTALL):
         query = m.group(0).replace("\n", "")
         log(logFile, "regex match: " + query)
         #writeFile(resultFile, query)
         lines.add(query)
 
-    for m in re.finditer(r'create\sindex\s\w+\son\s*(.+?\s*)*?("|;)', contents, re.IGNORECASE + re.MULTILINE):
+    for m in re.finditer(r'create\sindex\s\w+\son\s*.+?("|;)', contents, re.IGNORECASE | re.DOTALL):
         query = m.group(0).replace("\n", "")
         log(logFile, "regex match: " + query)
         #writeFile(resultFile, query)

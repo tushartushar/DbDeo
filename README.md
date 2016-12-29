@@ -1,7 +1,12 @@
-# DbDeo
-Database smell detector
+# DbDeo - Database smell detector
 
-It contains several components for downloading repos from github, collecting relevant metrics, and so on. A brief description of these components are given below.
+**Workflow**
+
+It contains several components for downloading repos from github, collecting relevant metrics, and so on. Here is the how these tools can be used:
+1. Use SQLRepoDownload to download repositories to analyze
+2. Use SQLExtract to extract sql statements from the downloaded repositories 
+3. Use BasicDbMetrics to compute basic database metrics. Use ProgLangMetrics to compute number of files belonging to major programming language as well as total LOC, and total number of files in a set of repositories.
+4. Use DbDeo to detect database smells in the downloaded repos.
 
 ##SQLRepoDownload
 This project downloads repositories provided via a csv file from GitHub and checks whether the downloaded repo has any SQL code. If the repo has SQL code, it retains the repo otherwise deletes it.
@@ -14,6 +19,18 @@ This project analyzes repositories, extract sql statements (select, insert, and 
 The entry file for the project is Main.py
 
 ##BasicDbMetrics
-This project computes basic database metrics such as number of select, insert, and create table statements per repository.
+- This project computes basic database metrics such as number of select, insert, and create table statements per repository. The entry file for the project is Main.py
+- Use ProgLangMetrics.py to compute number of files belonging to major programming language as well as total LOC, and total number of files in a set of repositories.
 
-The entry file for the project is Main.py
+##DbDeo
+This project analyzes database code and detect database smells. Currently, it supports detection of following database smells:
+- Compound Attribute
+- Adjacency List
+- God Table
+- Values in Column Definition
+- Metadata as Data
+- Multicolumn Attribute
+- Clone Tables
+- Duplicate Column Names
+- Index Shotgun
+- Obsolete Column Types

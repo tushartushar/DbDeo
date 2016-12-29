@@ -21,9 +21,12 @@ def downloadRepo(github, repoName, repoStoreRoot, logFile):
             pass
 
 
-repoInputFile = "/home/tushar/SQLRepoDownload/reposWithScore10.csv"
-repoStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos10/"
-repoTempStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos/"
+#repoInputFile = "/home/tushar/SQLRepoDownload/reposWithScore10.csv"
+repoInputFile = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/reposWithScore10.csv"
+#repoStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos10/"
+repoStoreRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/repos/"
+#repoTempStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos/"
+repoTempStoreRoot = repoStoreRoot
 logFile = repoStoreRoot + "log.txt"
 
 g = Github("githubDownloader", "newNEW1!")
