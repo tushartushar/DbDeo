@@ -14,14 +14,14 @@ class SmellTests(TestCase):
         root = pwd + "/Tests/"
         metaModel = MetaModel()
         fileTxt = file.replace(".sql", ".txt")
-        metaModel.prepareMetaModel(pwd +"/"+ file, pwd + "log.txt")
-        if not os.path.exists(pwd + '/temp'):
-            os.makedirs(pwd + '/temp')
-        smellDetector = SmellDetector(metaModel, pwd + "/temp/", file)
-        if (os.path.isfile(pwd + "/temp/" + fileTxt)):
-            os.remove(pwd + "/temp/" + fileTxt)
+        metaModel.prepareMetaModel(root +"/"+ file, root + "log.txt")
+        if not os.path.exists(root + '/temp'):
+            os.makedirs(root + '/temp')
+        smellDetector = SmellDetector(metaModel, root + "/temp/", file)
+        if (os.path.isfile(root + "/temp/" + fileTxt)):
+            os.remove(root + "/temp/" + fileTxt)
         smellDetector.detectAllDbSmells()
-        return FileUtils.readFileContents(pwd + "/temp/" + fileTxt)
+        return FileUtils.readFileContents(root + "/temp/" + fileTxt)
 
     def test_compoundAttributeSmell_variant1(self):
         contents = self.prepareTest("testSubject.sql")
