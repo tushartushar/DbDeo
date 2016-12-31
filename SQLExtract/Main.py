@@ -16,4 +16,5 @@ counter = 1
 for dir in os.listdir(repoStoreRoot):
     if os.path.isdir(os.path.join(repoStoreRoot, dir)):
         print("Analyzing repo " + str(counter) + ": " + str(dir))
+        counter += 1
         SQLExtract.extractAllSQLCode(logFile, repoStoreRoot, repoResultRoot, dir)
