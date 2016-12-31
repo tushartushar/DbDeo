@@ -26,7 +26,7 @@ def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
         files = [f for f in files if not f[0] == '.']
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for file in files:
-            print("Analyzing file " + str(root) + "/" + str(file))
+            #print("Analyzing file " + str(root) + "/" + str(file))
             storeSQLStatements(logFile, os.path.join(root,file), resultRoot, dir, lines)
     resultFile = os.path.join(resultRoot, dir + ".sql")
     f = open(resultFile, "a", errors='ignore')
