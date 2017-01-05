@@ -5,9 +5,12 @@ class UpdateStmt(object):
 
     def populate(self):
         self.setExpn = self.parsedStmt.getSetExpn()
+        #This restriction is being put to eliminate extra information because sql statement extraction
+        #extracts more than sql statements sometimes
+        if len(self.setExpn) > 80 or (not '=' in self.setExpn):
+            self.setExpn =""
 
     def isContainsCommaInSet(self):
-        for token in self.setExpn:
-            if ',' in token.value:
-                return True
+        if ',' in self.setExpn:
+            return True
         return False

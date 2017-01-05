@@ -3,6 +3,7 @@ from sqlparse.tokens import DML, DDL, Keyword
 from sqlparse.sql import IdentifierList, Identifier
 from Model.SQLStmtType import SQLStmtType
 from Model.TableColumn import TableColumn
+import Model.DataTypeConstants as DataTypes
 
 class SQLParse(object):
     def __init__(self, stmt):
@@ -122,6 +123,10 @@ class SQLParse(object):
             for token in item.flatten():
                 if token.value == ' ':
                     continue
+                if token.value == ';' or token.value == '{':
+                    if not curResult == "":
+                        resultList.append(curResult)
+                    return resultList
                 if token.value.upper() in ['==', '=', '>', '>=', '<', '<=', '<>', 'LIKE', 'BETWEEN', 'IN'] or token.is_keyword:
                     if not curResult =="":
                         resultList.append(curResult)
@@ -144,6 +149,8 @@ class SQLParse(object):
                             for value in token.tokens:
                                 if value.ttype is Keyword and not (value.value.upper() == 'DEFAULT'):
                                     return values
+                                if value.value == ';' or value.value == '{':
+                                    return values
                                 else:
                                     if not (value.value == ',' or value.value == ' '):
                                         values.append(value)
@@ -153,7 +160,7 @@ class SQLParse(object):
 
     def getSetExpn(self):
         set_seen = False
-        values = []
+        values = ""
         for item in self.parsed.tokens:
             if set_seen:
                 if item.is_group:
@@ -166,11 +173,11 @@ class SQLParse(object):
                                     if node.ttype is Keyword:
                                         return values
                                     else:
-                                        values.append(node)
+                                        values += node.value
                             else:
-                                values.append(value)
+                                values += value.value
                 else:
-                    values.append(item)
+                    values += item.value
             if item.ttype is Keyword and item.value.upper() == 'SET':
                 set_seen = True
         return values
@@ -299,7 +306,13 @@ class SQLParse(object):
         columnObjs = []
         for column in columns:
             tableColumn = TableColumn(column)
-            columnObjs.append(tableColumn)
+            #This restriction is being put to eliminate extra information because sql statement extraction
+            #extracts more than sql statements sometimes
+            if tableColumn.shortColumnType == DataTypes.UNKNOWN:
+                if tableColumn.isConstraint or tableColumn.isPrimaryKey or tableColumn.isForeignKey:
+                    columnObjs.append(tableColumn)
+            else:
+                columnObjs.append(tableColumn)
         return columnObjs
 
     def getIndexColumnList(self):
@@ -316,6 +329,8 @@ class SQLParse(object):
                                 continue
                             if not (item.value == ' ' or item.value == '(' or item.value == ')' or item.value == ','):
                                 columnList.append(item.value)
+                            if item.value == ';':
+                                return columnList
                     else:
                         name_seen = True
             else:

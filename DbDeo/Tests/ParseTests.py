@@ -62,6 +62,13 @@ class ParseTests(TestCase):
         createStmt.populate()
         self.assertEqual(createStmt.getColumnCount(), 3)
 
+    def test_table_column_count_in_create_negative(self):
+        sqlStmt = "CREATE TABLE statement.	  </p>	</blockquote>	<blockquote cite=\"https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2015-3416\">"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.getColumnCount(), 0)
+
     def test_table_name_in_createIndex(self):
         sqlStmt = "create index pIndex ON Persons (LastName, FirstName)"
         parseObj = SQLParse.SQLParse(sqlStmt)

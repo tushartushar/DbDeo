@@ -139,6 +139,21 @@ class TableColumn(object):
             self.shortColumnType = DataTypes.UNIQUEIDENTIFIER
         elif DataTypes.XML in self.columnType.upper():
             self.shortColumnType = DataTypes.XML
+        elif DataTypes.CLOB in self.columnType.upper():
+            self.shortColumnType = DataTypes.CLOB
+        elif DataTypes.BLOB in self.columnType.upper():
+            self.shortColumnType = DataTypes.BLOB
+        elif DataTypes.SERIAL in self.columnType.upper():
+            self.shortColumnType = DataTypes.SERIAL
+        elif DataTypes.IDENTITY in self.columnType.upper():
+            self.shortColumnType = DataTypes.IDENTITY
+        elif DataTypes.DOUBLE in self.columnType.upper():
+            self.shortColumnType = DataTypes.DOUBLE
+        elif DataTypes.OTHER in self.columnType.upper():
+            self.shortColumnType = DataTypes.OTHER
+        elif DataTypes.UUID in self.columnType.upper():
+            self.shortColumnType = DataTypes.UUID
+        elif DataTypes.GEOMETRY in self.columnType.upper():
+            self.shortColumnType = DataTypes.GEOMETRY
         else:
-            self.shortColumnType = self.columnType.upper()
-
+            self.shortColumnType = DataTypes.UNKNOWN

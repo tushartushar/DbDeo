@@ -11,7 +11,8 @@ class SmellTests(TestCase):
 
     def prepareTest(self, file):
         pwd = os.getcwd()
-        root = pwd + "/Tests/"
+        #root = pwd + "/Tests/"
+        root = pwd
         metaModel = MetaModel()
         fileTxt = file.replace(".sql", ".txt")
         metaModel.prepareMetaModel(root +"/"+ file, root + "log.txt")

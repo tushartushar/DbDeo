@@ -50,3 +50,4 @@ def computeMetrics(contents):
         ciStmts = len(result5)
 
     return createStmts, insertStmts, selectStmts, updateStmts, ciStmts
+
