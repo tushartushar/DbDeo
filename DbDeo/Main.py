@@ -2,8 +2,8 @@ import os
 from Model.MetaModel import MetaModel
 from DbSmellDetector.SmellDetector import  SmellDetector
 
-repoStoreRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/resultRepos/"
-resultRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/smellResult/"
+repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/tempRepo"
+resultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/results"
 logFile = repoStoreRoot + "log.txt"
 
 
