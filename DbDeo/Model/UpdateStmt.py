@@ -11,6 +11,8 @@ class UpdateStmt(object):
             self.setExpn =""
 
     def isContainsCommaInSet(self):
-        if ',' in self.setExpn:
+        commaCount = self.setExpn.count(',')
+        equalCount = self.setExpn.count('=')
+        if commaCount >= equalCount:
             return True
         return False

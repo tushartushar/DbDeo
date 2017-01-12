@@ -36,6 +36,10 @@ class SmellTests(TestCase):
         contents = self.prepareTest("testSubject.sql")
         self.assertIn("Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 3", contents)
 
+    def test_compoundAttributeSmell_variant3_negative(self):
+        contents = self.prepareTest("testSubject.sql")
+        self.assertNotIn("Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 3 Found in following statement: UPDATE sessions", contents)
+
     def test_adjacencyList(self):
         contents = self.prepareTest("testSubject.sql")
         self.assertIn("Detected: " + Constants.ADJACENCY_LIST, contents)

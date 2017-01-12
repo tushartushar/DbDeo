@@ -17,3 +17,4 @@ CREATE TABLE Bugs (comment_id SERIAL PRIMARY KEY, clob_value clob, status VARCHA
 CREATE TABLE IssueAttributes (  issue_id    BIGINT UNSIGNED NOT NULL,  attr_name   VARCHAR(100) NOT NULL,  attr_value  VARCHAR(100),  PRIMARY KEY (issue_id, attr_name), FOREIGN KEY (issue_id) REFERENCES Issues(issue_id));
 CREATE TABLE Bugs (        bug_id      SERIAL PRIMARY KEY,        description VARCHAR(1000),        tag1        VARCHAR(20),        tag2        VARCHAR(20), tag3        VARCHAR(20));
 CREATE TABLE Customers (  customer_id    BIGINT UNSIGNED NOT NULL,  name   VARCHAR(100) NOT NULL,  surname  TEXT,  preferences NTEXT, PRIMARY KEY (customer_id), FOREIGN KEY (issue_id) REFERENCES Issues(issue_id));
+UPDATE sessions SET end=?, num_cmds=? WHERE session==?"
