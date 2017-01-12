@@ -69,6 +69,13 @@ class ParseTests(TestCase):
         createStmt.populate()
         self.assertEqual(createStmt.getColumnCount(), 3)
 
+    def test_table_column_count_in_create_2(self):
+        sqlStmt = "create table abcde1(aak1 timestamp, aak2 int, aav1 string, aav2 binary, aav3 enum, primary key(aak1, aak2)) histogram(aak2, aav1) partition by time_and_value(aak1('YYYY'), aak2) table_format=compressed"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.getColumnCount(), 4)
+
     def test_table_column_count_in_create_negative(self):
         sqlStmt = "CREATE TABLE statement.	  </p>	</blockquote>	<blockquote cite=\"https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2015-3416\">"
         parseObj = SQLParse.SQLParse(sqlStmt)

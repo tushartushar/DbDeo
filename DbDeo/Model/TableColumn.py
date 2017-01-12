@@ -22,11 +22,11 @@ class TableColumn(object):
         ref_seen = False
         ref_table_seen = False
         for item in self.parsedColumn:
-            if item.is_whitespace or item.value == '(' or item.value == ')' or item.value.upper() == 'KEY':
+            if item.is_whitespace or item.value == '(' or item.value == ')' or item.value.upper() == 'KEY' or item.value.upper() == '=' or item.value.upper() == ',':
                 continue
             if self.isPrimaryKey and self.isConstraint:
                 self.referencedColumnList.append(item.value)
-            if item.value.upper() == 'PRIMARY':
+            elif item.value.upper() == 'PRIMARY':
                 self.isPrimaryKey = True
                 if not name_seen:
                     self.isConstraint = True
@@ -155,5 +155,7 @@ class TableColumn(object):
             self.shortColumnType = DataTypes.UUID
         elif DataTypes.GEOMETRY in self.columnType.upper():
             self.shortColumnType = DataTypes.GEOMETRY
+        elif DataTypes.STRING in self.columnType.upper():
+            self.shortColumnType = DataTypes.STRING
         else:
             self.shortColumnType = DataTypes.UNKNOWN

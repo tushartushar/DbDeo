@@ -228,38 +228,28 @@ class SQLParse(object):
         create_seen = False
         table_seen = False
         name_seen = False
+
         for token in self.parsed.tokens:
-            if create_seen:
-                if table_seen:
-                    if not token.value == ' ':
-                        if token.is_group:
-                            for item in token.tokens:
-                                if item.is_group:
-                                    for node in item.tokens:
-                                        if not name_seen:
-                                            name_seen = True
-                                            continue
-                                        if name_seen:
-                                            result.append(node)
-                                else:
-                                    if not name_seen:
-                                        name_seen = True
-                                        continue
-                                    if name_seen:
-                                        result.append(item)
+            if token.is_group:
+                for ttoken in token.flatten():
+                    if create_seen:
+                        if table_seen:
+                            if not token.value == ' ':
+                                if not name_seen:
+                                    name_seen = True
+                                    continue
+                                if name_seen:
+                                    result.append(ttoken)
                         else:
-                            if not name_seen:
-                                name_seen = True
-                                continue
-                            if name_seen:
-                                result.append(token)
-                else:
-                    if token.ttype is Keyword and token.value.upper() == 'TABLE':
-                        table_seen = True
+                            if ttoken.ttype is Keyword and ttoken.value.upper() == 'TABLE':
+                                table_seen = True
+                    else:
+                        if ttoken.is_keyword and ttoken.value.upper() == 'CREATE':
+                            create_seen = True
             else:
-                b1 = token.is_keyword
-                b2 = token.value.upper() == 'CREATE'
-                if b1 and b2:
+                if token.ttype is Keyword and token.value.upper() == 'TABLE':
+                    table_seen = True
+                if token.is_keyword and token.value.upper() == 'CREATE':
                     create_seen = True
         return result
 
@@ -279,6 +269,9 @@ class SQLParse(object):
                 continue
             if token.value == ')':
                 paranthesis_depth -= 1
+                #break the loop if we have more closing brackets than starting brackets (to remove extraneous text in the statement)
+                if paranthesis_depth <= 0:
+                    break
                 continue
             if token.is_group:
                 for node in token.tokens:
@@ -300,6 +293,7 @@ class SQLParse(object):
                     curDef.append(token)
             else:
                 curDef.append(token)
+
         if not curDef == []:
             definitions.append(curDef)
         return definitions
