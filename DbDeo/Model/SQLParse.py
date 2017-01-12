@@ -191,9 +191,11 @@ class SQLParse(object):
                     if not token.value == ' ':
                         if token.is_group:
                             for item in token.tokens:
-                                return item.value
+                                if not item.is_keyword:
+                                    return item.value
                         else:
-                            return token.value
+                            if not token.is_keyword:
+                                return token.value
                 else:
                     if token.ttype is Keyword and token.value.upper() == 'TABLE':
                         table_seen = True

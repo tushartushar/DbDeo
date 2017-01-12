@@ -55,6 +55,13 @@ class ParseTests(TestCase):
         createStmt.populate()
         self.assertEqual(createStmt.tableName, 'Comments')
 
+    def test_table_name_in_create_with_if(self):
+        sqlStmt = "CREATE TABLE IF NOT EXISTS output_history (session integer, line integer, output text,PRIMARY KEY (session, line))"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.tableName, 'output_history')
+
     def test_table_column_count_in_create(self):
         sqlStmt = "CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED, comment TEXT NOT NULL, FOREIGN KEY (parent_id) REFERENCES Comments(comment_id));"
         parseObj = SQLParse.SQLParse(sqlStmt)
