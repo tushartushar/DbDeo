@@ -116,7 +116,7 @@ class SmellDetector(object):
                     #search the similar table names that only differs in the number
                     for cTableStmt in self.metaModel.createStmtList:
                         if not createStmt == cTableStmt:
-                            searchStr = r'(' + m.group(1) + ')\d+'
+                            searchStr = r'\s(' + m.group(1) + ')\d+\s'
                             k = re.search(searchStr, cTableStmt.tableName)
                             if not k == None:
                                 #FileUtils.writeFile(self.resultFile, "Detected: " + Constants.CLONE_TABLES
