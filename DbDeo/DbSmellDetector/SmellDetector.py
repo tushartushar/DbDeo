@@ -100,11 +100,13 @@ class SmellDetector(object):
                     #search the similar table names that only differs in the number
                     for cTableStmt in self.metaModel.createStmtList:
                         if not createStmt == cTableStmt:
-                            searchStr = r'\s(' + m.group(1) + ')\d+\s'
-                            k = re.search(searchStr, cTableStmt.tableName)
-                            if not k == None:
-                                self.smells.add("Detected: " + Constants.CLONE_TABLES
-                                        + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                            #In certain cases, a table is repeated (with same name) with slight difference. This check eliminates that case
+                            if not createStmt.tableName == cTableStmt.tableName:
+                                searchStr = r'\s(' + m.group(1) + ')\d+\s'
+                                k = re.search(searchStr, cTableStmt.tableName)
+                                if not k == None:
+                                    self.smells.add("Detected: " + Constants.CLONE_TABLES
+                                            + " Found in following statement: " + createStmt.parsedStmt.stmt)
 
     def detectDuplicateColumnNames(self):
         listOfDuplicates = []
@@ -114,6 +116,9 @@ class SmellDetector(object):
                     continue
                 #Now, look for the similar column in all the column definitions
                 for ctStmt in self.metaModel.createStmtList:
+                    #In certain cases, a table is repeated (with same name) with slight difference. This check eliminates that case
+                    if not createStmt.tableName == ctStmt.tableName:
+                        continue
                     for colObj in ctStmt.columnList:
                         if colObj.isConstraint:
                             continue
@@ -131,9 +136,10 @@ class SmellDetector(object):
                                         listOfDuplicates.append(columnObj)
 
     def detectIndexShotgun(self):
-        self.detectIndexShotgun_variant1()
-        self.detectIndexShotgun_variant2()
-        self.detectIndexShotgun_variant3()
+        self.detectIndexShotgun_variant1() #No index
+        #We are not going to detect the second variant since most of the database vendors supports indexes for primary keys implicitly
+        #self.detectIndexShotgun_variant2() #Insufficient index
+        self.detectIndexShotgun_variant3() #Unused index
 
     def detectIndexShotgun_variant2(self):
         # detecting variant 2: Insufficient indexes

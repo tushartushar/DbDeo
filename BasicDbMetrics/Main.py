@@ -2,9 +2,10 @@ import os
 import sys
 import MetricsCalculator
 
-#repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/resultRepos"
-repoResultRoot = sys.argv[1]
-resultFile = repoResultRoot + "/metrics.csv"
+repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/resultRepos"
+#repoResultRoot = sys.argv[1]
+#resultFile = repoResultRoot + "/metrics.csv"
+resultFile = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/metrics.csv"
 MetricsCalculator.writeFile(resultFile, "repo,selectStmtCount,createStmtCount,insertStmtCount,updateStmtCount,createIndexStmtCount")
 
 counter = 1
