@@ -102,7 +102,7 @@ class SmellDetector(object):
                         if not createStmt == cTableStmt:
                             #In certain cases, a table is repeated (with same name) with slight difference. This check eliminates that case
                             if not createStmt.tableName == cTableStmt.tableName:
-                                searchStr = r'\s(' + m.group(1) + ')\d+\s'
+                                searchStr = r'^(' + m.group(1) + ')\d+$'
                                 k = re.search(searchStr, cTableStmt.tableName)
                                 if not k == None:
                                     self.smells.add("Detected: " + Constants.CLONE_TABLES
@@ -117,7 +117,7 @@ class SmellDetector(object):
                 #Now, look for the similar column in all the column definitions
                 for ctStmt in self.metaModel.createStmtList:
                     #In certain cases, a table is repeated (with same name) with slight difference. This check eliminates that case
-                    if not createStmt.tableName == ctStmt.tableName:
+                    if createStmt.tableName == ctStmt.tableName:
                         continue
                     for colObj in ctStmt.columnList:
                         if colObj.isConstraint:
