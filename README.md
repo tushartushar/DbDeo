@@ -3,6 +3,7 @@
 ##**Workflow**
 
 It contains several components for downloading repos from github, collecting relevant metrics, and so on. Here is the how these tools can be used:
+
 1. **Download repositories** - Use SQLRepoDownload to download repositories to analyze
 
 2. **Extract SQL code** - Use SQLExtract and SQLCleanser to extract sql statements from the downloaded repositories 
