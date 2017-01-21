@@ -1,5 +1,4 @@
 import os
-from Utils import FileUtils
 from DbSmellDetector import Constants
 import re
 import Model.DataTypeConstants as Datatypes
@@ -72,6 +71,7 @@ class SmellDetector(object):
             if varCharColumnCount >= 2:
                 self.smells.add("Detected: " + Constants.METADATA_AS_DATA
                                     + " Found in following statement: " + createStmt.parsedStmt.stmt)
+
     def detectMulticolumnAttribute(self):
         for createStmt in self.metaModel.createStmtList:
             found = False
