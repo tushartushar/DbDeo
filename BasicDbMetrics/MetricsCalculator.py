@@ -1,7 +1,6 @@
 import os
 import re
 
-
 def writeFile(fileName, text):
     with open(fileName, "a", errors='ignore') as f:
         f.write(text + "\n")
@@ -15,38 +14,46 @@ def readFileContents(fileName):
 def computeAllMetrics(sourceRoot, file, resultFile):
     curfile = os.path.join(sourceRoot, file)
     contents = readFileContents(curfile)
-    createStmts, insertStmts, selectStmts, updateStmts, ciStmts = computeMetrics(contents)
+    createStmts, insertStmts, selectStmts, updateStmts, ciStmts = computeMetrics(curfile)
 
     writeFile(resultFile, file + "," + str(selectStmts) + "," + str(createStmts) + "," + str(insertStmts)
               + "," + str(updateStmts) + "," + str(ciStmts))
 
 
-def computeMetrics(contents):
-    result1 = re.findall(
-        r'("select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?")|(select\s+.+\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?;)',
-        contents, re.IGNORECASE)
+def computeMetrics(file):
     selectStmts = 0
-    if (result1 != None):
-        selectStmts = len(result1)
     createStmts = 0
-    result2 = re.findall(r'create\stable\s.+?\s*\(.+?(;|")', contents,
-                         re.IGNORECASE| re.DOTALL)
-    if (result2 != None):
-        createStmts = len(result2)
     insertStmts = 0
-    result3 = re.findall(r'insert\sinto\s\w+\svalues\s*.+?(;|")',
-                         contents, re.IGNORECASE| re.DOTALL)
-    if (result3 != None):
-        insertStmts = len(result3)
     updateStmts = 0
-    result4 = re.findall(r'update\s\w+\sset\s*.+?\s*where\s*.+?("|;)',
-                         contents, re.IGNORECASE| re.DOTALL)
-    if (result4 != None):
-        updateStmts = len(result4)
     ciStmts = 0
-    result5 = re.findall(r'create\sindex\s\w+\son\s*.+?("|;)',
-                         contents, re.IGNORECASE| re.DOTALL)
-    if (result5 != None):
-        ciStmts = len(result5)
+    with open(file, "r", errors='ignore') as r:
+        for line in r:
+            match1 = re.search(
+                r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?', line, re.IGNORECASE)
+            if match1:
+                selectStmts += 1
+                continue
+
+            match2 = re.search(r'create\stable\s', line, re.IGNORECASE)
+            if match2:
+                createStmts += 1
+                continue
+
+            match3 = re.search(r'insert\sinto\s\w+\svalues', line, re.IGNORECASE)
+            if match3:
+                insertStmts += 1
+                continue
+
+            match4 = re.findall(r'update\s\w+\sset\s*',
+                                line, re.IGNORECASE)
+            if match4:
+                updateStmts += 1
+                continue
+
+            match5 = re.search(r'create\sindex\s',
+                         line, re.IGNORECASE)
+            if match5:
+                ciStmts += 1
 
     return createStmts, insertStmts, selectStmts, updateStmts, ciStmts
+

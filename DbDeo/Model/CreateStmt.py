@@ -31,3 +31,13 @@ class CreateStmt(object):
                         if not (refCol == ' ' or refCol == ',' or refCol == ';'):
                             keyList.append([column.referencedTable, refCol])
         return keyList
+
+    def getForeignKeyList(self):
+        keyList = []
+        for column in self.columnList:
+            if column.isForeignKey:
+                if column.isConstraint:
+                    for refCol in column.referencedColumnList:
+                        if not (refCol == ' ' or refCol == ',' or refCol == ';'):
+                            keyList.append([column.referencedTable, refCol])
+        return keyList

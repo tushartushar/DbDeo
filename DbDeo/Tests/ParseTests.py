@@ -55,12 +55,33 @@ class ParseTests(TestCase):
         createStmt.populate()
         self.assertEqual(createStmt.tableName, 'Comments')
 
+    def test_table_name_in_create_with_if(self):
+        sqlStmt = "CREATE TABLE IF NOT EXISTS output_history (session integer, line integer, output text,PRIMARY KEY (session, line))"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.tableName, 'output_history')
+
     def test_table_column_count_in_create(self):
         sqlStmt = "CREATE TABLE Comments (comment_id SERIAL PRIMARY KEY, parent_id BIGINT UNSIGNED, comment TEXT NOT NULL, FOREIGN KEY (parent_id) REFERENCES Comments(comment_id));"
         parseObj = SQLParse.SQLParse(sqlStmt)
         createStmt = CreateStmt(parseObj)
         createStmt.populate()
         self.assertEqual(createStmt.getColumnCount(), 3)
+
+    def test_table_column_count_in_create_2(self):
+        sqlStmt = "create table abcde1(aak1 timestamp, aak2 int, aav1 string, aav2 binary, aav3 enum, primary key(aak1, aak2)) histogram(aak2, aav1) partition by time_and_value(aak1('YYYY'), aak2) table_format=compressed"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.getColumnCount(), 4)
+
+    def test_table_column_count_in_create_negative(self):
+        sqlStmt = "CREATE TABLE statement.	  </p>	</blockquote>	<blockquote cite=\"https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2015-3416\">"
+        parseObj = SQLParse.SQLParse(sqlStmt)
+        createStmt = CreateStmt(parseObj)
+        createStmt.populate()
+        self.assertEqual(createStmt.getColumnCount(), 0)
 
     def test_table_name_in_createIndex(self):
         sqlStmt = "create index pIndex ON Persons (LastName, FirstName)"
