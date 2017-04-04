@@ -21,6 +21,8 @@ def readFileContents(fileName):
     return ""
 
 def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
+    if dir == 'resultRepos':
+        return
     lines = set() #using set to eliminate duplicate sql statements
     for root, dirs, files in os.walk(os.path.join(sourceRoot, dir)):
         files = [f for f in files if not f[0] == '.']

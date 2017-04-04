@@ -7,9 +7,9 @@ import SQLExtract
 #repoResultRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/resultRepos/"
 repoStoreRoot = sys.argv[1]
 repoResultRoot = repoStoreRoot + '/resultRepos'
-if os.path.exists(repoResultRoot):
-    shutil.rmtree(repoResultRoot)
-os.makedirs(repoResultRoot)
+#if os.path.exists(repoResultRoot):
+#    shutil.rmtree(repoResultRoot)
+#os.makedirs(repoResultRoot)
 
 logFile = repoResultRoot + "/log.txt"
 counter = 1

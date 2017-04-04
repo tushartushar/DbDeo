@@ -11,6 +11,9 @@ resultFile = repoResultRoot + "/progLang.csv"
 
 
 PLUsedMetrics.writeFile(resultFile, "repo,TotalFiles,java,cs,c,cxx,py,vb,php,jsx,pl,mm,rb,aspx,htmx,sql,pkb,TotalLOC")
+counter = 1
 for dir in os.listdir(repoStoreRoot):
     if os.path.isdir(os.path.join(repoStoreRoot, dir)):
+        print(str(counter) + " analyzing dir: " + str(dir))
+        counter += 1
         PLUsedMetrics.computePLusedMetrics(repoStoreRoot, dir, resultFile)
