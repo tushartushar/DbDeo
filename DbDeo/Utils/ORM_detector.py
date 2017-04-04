@@ -5,7 +5,7 @@ import re
 repo_root = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative"
 logFile = repo_root + "/log_orm.txt"
 outFile = repo_root + "/orm.csv"
-
+in_csv = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/new_appNature.csv"
 
 def logit(result):
     print("Match found: " + result.group(0))
@@ -126,9 +126,14 @@ def check_folder_for_orm(dir):
 
 
 counter = 1
-for dir in os.listdir(repo_root):
-    if os.path.isdir(os.path.join(repo_root, dir)):
-        print("Analyzing repo " + str(counter) + ": " + str(dir) + "\n")
-        Utils.FileUtils.writeFile(logFile, "Analyzing repo " + str(counter) + ": " + str(dir) + "\n")
-        counter += 1
-        check_folder_for_orm(dir)
+with open(in_csv, "r+", errors='ignore') as t:
+    for tLine in t:
+        splitLine = tLine.split(",")
+        cur_dir = os.path.join(repo_root, splitLine[0])
+        if os.path.isdir(cur_dir):
+            print("Analyzing repo " + str(counter) + ": " + str(splitLine[0]) + "\n")
+            Utils.FileUtils.writeFile(logFile, "Analyzing repo " + str(counter) + ": " + str(splitLine[0]) + "\n")
+            counter += 1
+            check_folder_for_orm(splitLine[0])
+        else:
+            Utils.FileUtils.writeFile(logFile, "Repo not found: " + splitLine[0])
