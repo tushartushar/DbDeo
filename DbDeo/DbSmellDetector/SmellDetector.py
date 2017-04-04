@@ -137,13 +137,13 @@ class SmellDetector(object):
 
     def detectIndexShotgun(self):
         self.detectIndexShotgun_variant1() #No index
-        #We are not going to detect the second variant since most of the database vendors supports indexes for primary keys implicitly
-        #self.detectIndexShotgun_variant2() #Insufficient index
+        #most of the database vendors supports indexes for primary keys implicitly, so we only check the second variant for foreign keys
+        self.detectIndexShotgun_variant2() #Insufficient index
         self.detectIndexShotgun_variant3() #Unused index
 
     def detectIndexShotgun_variant2(self):
         # detecting variant 2: Insufficient indexes
-        keyList = self.metaModel.getKeyList()  # keyList will contain 'table name, attribute name in (primary/foreign) key' tuples
+        keyList = self.metaModel.getForeignKeyList()  # keyList will contain 'table name, attribute name in (foreign) key' tuples
         indexList = self.metaModel.getAllIndexList()  # indexList will contain 'table name, attribute' tuple
         for keyItem in keyList:
             if not keyItem in indexList:

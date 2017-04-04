@@ -3,13 +3,13 @@ import shutil
 import sys
 import SQLExtract
 
-#repoStoreRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/repos/"
-#repoResultRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/resultRepos/"
-repoStoreRoot = sys.argv[1]
-repoResultRoot = repoStoreRoot + '/resultRepos'
+repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative/"
+repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/rq_sql_repo/"
+#repoStoreRoot = sys.argv[1]
+#repoResultRoot = repoStoreRoot + '/resultRepos'
 #if os.path.exists(repoResultRoot):
 #    shutil.rmtree(repoResultRoot)
-os.makedirs(repoResultRoot)
+#os.makedirs(repoResultRoot)
 
 logFile = repoResultRoot + "/log.txt"
 counter = 1

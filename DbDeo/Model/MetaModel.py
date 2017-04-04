@@ -48,10 +48,19 @@ class MetaModel(object):
             createIndexStmt.populate()
             self.createIndexStmtList.append(createIndexStmt)
 
+    #gets primary as well as foreign keys
     def getKeyList(self):
         keyList = []
         for createStmt in self.createStmtList:
             curKeyList = createStmt.getKeyList()
+            if len(curKeyList) > 0:
+                keyList.extend(curKeyList)
+        return keyList
+
+    def getForeignKeyList(self):
+        keyList = []
+        for createStmt in self.createStmtList:
+            curKeyList = createStmt.getForeignKeyList()
             if len(curKeyList) > 0:
                 keyList.extend(curKeyList)
         return keyList

@@ -15,10 +15,16 @@ def cleanseCreateTable(parsedStmt):
     count = 0
     newline = ""
     bracket_seen = False
+    name_seen = False
+    trip_next = False
     for token in parsedStmt.flatten():
-        if token.value == '(':
+        token_value = token.value.upper()
+        if (not name_seen) and (not token_value in [' ', 'CREATE', 'TABLE', 'IF', 'NOT', 'EXISTS', 'INSERT', 'INTO', 'VALUES']):
+            name_seen = True
+        elif token.value == '(':
             count += 1
             bracket_seen = True
+            trip_next = False
         elif token.value == ')':
             count -= 1
             if count <= 0:
@@ -27,15 +33,23 @@ def cleanseCreateTable(parsedStmt):
                     return newline
                 else:
                     return ""
+        elif name_seen and (not bracket_seen):
+            if token.value.upper() == 'VALUES':
+                trip_next = False
+            else:
+                if trip_next:
+                    return ""
+                if token.value == ' ': #there are useless words... probably not a correct create statement
+                    trip_next = True
+
         newline += token.value
-    if bracket_seen:
-        return newline
-    else:
-        return ""
+
+    return ""
 
 
 def cleanseSelectStmt(line):
-    regex = r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?'
+    #regex = r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?'
+    regex = r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s+(((and|or)?\s?\w+:{0,2}\w*\s?!?=\s?(([\$\%]\w+)|(\w+)|(\w:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?)\s?)))*?)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?'
     match = re.search(regex, line, flags=re.IGNORECASE)
     if match:
         return str(match.group(0))
@@ -58,8 +72,22 @@ def cleanseUpdateStatement(line):
         return str(match1.group(0)) + str(match2.group(0))
     return ""
 
+
+def cleanseIndexStmt(parsedStmt):
+    newline = ""
+    on_seen = False
+    for token in parsedStmt.flatten():
+        if token.value.upper() == 'ON':
+            on_seen = True
+        elif on_seen and token.is_keyword:
+            return newline
+        newline += token.value
+    return newline
+
+
 def processLine(inLine):
     line = inLine.strip('"')
+    #print(line)
     parsedStmt = SQLParse.SQLParse(line)
     if(parsedStmt.getStmtType()==SQLStmtType.SELECT):
         newline = cleanseSelectStmt(line)
@@ -80,7 +108,8 @@ def processLine(inLine):
         newline = cleanseUpdateStatement(line)
         return newline
     if parsedStmt.getStmtType() == SQLStmtType.CREATE_INDEX:
-        return line
+        newline = cleanseIndexStmt(parsedStmt.parsed)
+        return newline
 
 i=1
 for file in os.listdir(repoStoreRoot):
@@ -93,6 +122,7 @@ for file in os.listdir(repoStoreRoot):
                 with open(os.path.join(newRepoStoreRoot, file), "w", errors='ignore') as w:
                     for line in r:
                         line = line.strip()
+                        line = re.sub(r' +', r' ', line)
                         if len(line)> 1000:
                             line = line[:1000]
                         newline = processLine(line)

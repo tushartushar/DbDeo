@@ -2,10 +2,10 @@ import sys
 import os
 from DbSmellDetector import Constants
 
-#resultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/results"
-resultRoot = sys.argv[1]
-#aggregatedFile = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/rawDetectedSmells.csv"
-aggregatedFile = resultRoot + "/rawDetectedSmells.csv"
+resultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/results"
+#resultRoot = sys.argv[1]
+aggregatedFile = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/detectedSmells30Jan.csv"
+#aggregatedFile = resultRoot + "/rawDetectedSmells.csv"
 
 with open(aggregatedFile, "w", errors='ignore') as f:
     f.write("Repo,CompoundAttribute1,CompoundAttribute2,CompoundAttribute3,AdjacencyList,GodTable,ValuesInColDef,MetadataAsData,MulticolumnAttribute,CloneTables,DuplicateColumnNames,IndexShotgun1,IndexShotgun2,IndexShotgun3,ObsoleteColumnTypes\n")
