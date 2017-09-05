@@ -1,7 +1,9 @@
 import os
-from DbSmellDetector import Constants
 import re
-import Model.DataTypeConstants as Datatypes
+
+import DataTypeConstants as Datatypes
+from DbSmellDetector import Constants
+
 
 class SmellDetector(object):
     def __init__(self, metaModel, resultRoot, file):

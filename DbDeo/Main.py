@@ -1,11 +1,11 @@
-import sys
 import os
-from Model.MetaModel import MetaModel
-from DbSmellDetector.SmellDetector import  SmellDetector
-import Utils.PrimaryKeyInfo
 
-repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/resultReposCleansed"
-resultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/results"
+import Utils.PrimaryKeyInfo
+from DbSmellDetector.SmellDetector import SmellDetector
+from MetaModel import MetaModel
+
+repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/newData/silo/cleansed"
+resultRoot = "/Users/Tushar/Documents/Research/dbSmells/newData/silo/result"
 #repoResultRoot = sys.argv[1]
 logFile = resultRoot + "/log.txt"
 
@@ -22,5 +22,5 @@ for file in os.listdir(repoStoreRoot):
         metaModel.prepareMetaModel(os.path.join(repoStoreRoot, file), logFile)
         #just to extract primary key information
         Utils.PrimaryKeyInfo.printPrimaryKeyInfo(metaModel)
-        #smellDetector = SmellDetector(metaModel, resultRoot, file)
-        #smellDetector.detectAllDbSmells()
+        smellDetector = SmellDetector(metaModel, resultRoot, file)
+        smellDetector.detectAllDbSmells()

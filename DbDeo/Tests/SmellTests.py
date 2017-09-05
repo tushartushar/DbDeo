@@ -1,10 +1,10 @@
+import os
 from unittest import TestCase
 
-from Model.MetaModel import MetaModel
-from DbSmellDetector.SmellDetector import SmellDetector
-import os
-from Utils import FileUtils
 from DbSmellDetector import Constants
+from DbSmellDetector.SmellDetector import SmellDetector
+from MetaModel import MetaModel
+from Utils import FileUtils
 
 
 class SmellTests(TestCase):

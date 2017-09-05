@@ -1,10 +1,11 @@
 from Model import SelectStmt, SQLParse
+from Model.CreateIndexStmt import CreateIndexStmt
 from Model.CreateStmt import CreateStmt
 from Model.InsertStmt import InsertStmt
 from Model.SQLStmtType import SQLStmtType
-from Utils import FileUtils
 from Model.UpdateStmt import UpdateStmt
-from Model.CreateIndexStmt import CreateIndexStmt
+from Utils import FileUtils
+
 
 class MetaModel(object):
     def __init__(self):

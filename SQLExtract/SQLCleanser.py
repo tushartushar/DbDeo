@@ -1,15 +1,32 @@
-# This program cleanse the extracted sql statements.
-# In the first phase of sql statement extraction, we get a lot of noise because regex are not capable of covering all
-# variations of sql statements.
-# In this phase, we further cleanse the sql statements that we got from the first phase.
-import os
+import re
 from Model import SQLParse
 from Model.SQLStmtType import SQLStmtType
-import re
 
-repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/resultRepos"
-newRepoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/resultReposCleansed"
-
+def processLine(inLine):
+    line = inLine.strip('"')
+    #print(line)
+    parsedStmt = SQLParse.SQLParse(line)
+    if(parsedStmt.getStmtType()==SQLStmtType.SELECT):
+        newline = cleanseSelectStmt(line)
+        return newline
+    if(parsedStmt.getStmtType()==SQLStmtType.CREATE):
+        newline = cleanseCreateTable(parsedStmt.parsed)
+        return newline
+    if(parsedStmt.getStmtType()==SQLStmtType.INSERT):
+        newline = cleanseCreateTable(parsedStmt.parsed)
+        return newline
+    if(parsedStmt.getStmtType()==SQLStmtType.UPDATE):
+        #I removed all noise-generating characters to make regex simpler
+        line = re.sub(r' +', r' ', line)
+        line = re.sub(r'\'', r'', line)
+        line = re.sub(r'\"', r'', line)
+        line = re.sub(r'\t', r'', line)
+        line = re.sub(r'\\', r'', line)
+        newline = cleanseUpdateStatement(line)
+        return newline
+    if parsedStmt.getStmtType() == SQLStmtType.CREATE_INDEX:
+        newline = cleanseIndexStmt(parsedStmt.parsed)
+        return newline
 
 def cleanseCreateTable(parsedStmt):
     count = 0
@@ -83,49 +100,3 @@ def cleanseIndexStmt(parsedStmt):
             return newline
         newline += token.value
     return newline
-
-
-def processLine(inLine):
-    line = inLine.strip('"')
-    #print(line)
-    parsedStmt = SQLParse.SQLParse(line)
-    if(parsedStmt.getStmtType()==SQLStmtType.SELECT):
-        newline = cleanseSelectStmt(line)
-        return newline
-    if(parsedStmt.getStmtType()==SQLStmtType.CREATE):
-        newline = cleanseCreateTable(parsedStmt.parsed)
-        return newline
-    if(parsedStmt.getStmtType()==SQLStmtType.INSERT):
-        newline = cleanseCreateTable(parsedStmt.parsed)
-        return newline
-    if(parsedStmt.getStmtType()==SQLStmtType.UPDATE):
-        #I removed all noise-generating characters to make regex simpler
-        line = re.sub(r' +', r' ', line)
-        line = re.sub(r'\'', r'', line)
-        line = re.sub(r'\"', r'', line)
-        line = re.sub(r'\t', r'', line)
-        line = re.sub(r'\\', r'', line)
-        newline = cleanseUpdateStatement(line)
-        return newline
-    if parsedStmt.getStmtType() == SQLStmtType.CREATE_INDEX:
-        newline = cleanseIndexStmt(parsedStmt.parsed)
-        return newline
-
-i=1
-for file in os.listdir(repoStoreRoot):
-    if file.endswith(".sql"):
-        print (str(i) + ":"+ str(file))
-        i += 1
-        if not os.path.exists(os.path.join(newRepoStoreRoot, file)):
-            print ("...analyzing")
-            with open(os.path.join(repoStoreRoot, file), "r", errors='ignore') as r:
-                with open(os.path.join(newRepoStoreRoot, file), "w", errors='ignore') as w:
-                    for line in r:
-                        line = line.strip()
-                        line = re.sub(r' +', r' ', line)
-                        if len(line)> 1000:
-                            line = line[:1000]
-                        newline = processLine(line)
-                        if not newline == "":
-                            w.write(str(newline) + "\n")
-

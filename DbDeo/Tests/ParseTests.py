@@ -1,10 +1,11 @@
 from unittest import TestCase
 
 from Model import SQLParse
-from Model.SQLStmtType import SQLStmtType
-from Model.SelectStmt import SelectStmt
-from Model.CreateStmt import CreateStmt
 from Model.CreateIndexStmt import CreateIndexStmt
+from Model.CreateStmt import CreateStmt
+from Model.SQLStmtType import SQLStmtType
+from SelectStmt import SelectStmt
+
 
 class ParseTests(TestCase):
     def test_checkStmtType_select(self):
