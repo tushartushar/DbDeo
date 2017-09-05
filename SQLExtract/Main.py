@@ -65,8 +65,3 @@ extract_sql_loose()
 cleanse_sql()
 print("Done - Thank you.")
 
-
-
-
-
-
