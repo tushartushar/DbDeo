@@ -1,6 +1,6 @@
 # DbDeo - Database smell detector
 
-##**Workflow**
+## **Workflow**
 
 It contains several components for downloading repos from github, collecting relevant metrics, and so on. Here is the how these tools can be used:
 
@@ -12,28 +12,30 @@ It contains several components for downloading repos from github, collecting rel
 
 4. **Detect database smells** - Use DbDeo to detect database smells in the downloaded repos.
 
-###SQLRepoDownload
+### SQLRepoDownload
 This project downloads repositories provided via a csv file from GitHub and checks whether the downloaded repo has any SQL code. If the repo has SQL code, it retains the repo otherwise deletes it.
 
 The entry file for the project is SQLRepoDownload/Main.py
 
-###SQLExtract
-This project analyzes repositories, extract sql statements (select, insert, and create), and put them in a sql file (one per each repo).
+### SQLExtract
+SQL statement extraction happens in two stages. In the first stage, we analyze the whole repository (all the files), and extract sql statements (select, insert, and create), and put them in a sql file (one per each repo). In the second phase, we cleanse the extracted sql statements. In the first phase of sql statement extraction, we get a lot of noise because regex are not capable of covering all variations of sql statements. In this phase, we further cleanse the sql statements that we got from the first phase.
 
 The entry file for the project is SQLExtract/Main.py
 
-###SQLCleanser
-This program cleanse the extracted sql statements.
+#### Using distribution
+The compiled source has been put in ```SQLExtract_dist``` folder. You may directly execute the SQLExtract command on terminal (rather than installing dependencies and executing source code using python). The folder has executable files for Mac as well as for Windows operating system. Therefore, go to ```SQLExtract_dist\SQLExtract_win``` if you are working on Windows.
 
-In the first phase of sql statement extraction, we get a lot of noise because regex are not capable of covering all variations of sql statements. In this phase, we further cleanse the sql statements that we got from the first phase.
+SQLExtract takes one parameter - the absolute path of the folder where you have put all the projects to analyze. For instance, if the folder
+*/Users/Tushar/Workspace/all_projects* contains folders containing source code belonging to different projects such as *project1*, *project2*, and so on, then specify the following command:
+```
+$ ./SQLExtract /Users/Tushar/Workspace/all_projects/
+```
 
-The entry file for the project is DbDeo/SQLCleanser/Main.py
-
-###BasicDbMetrics
+### BasicDbMetrics
 - This project computes basic database metrics such as number of select, insert, and create table statements per repository. The entry file for the project is Main.py
 - Use ProgLangMetrics.py to compute number of files belonging to major programming language as well as total LOC, and total number of files in a set of repositories.
 
-###DbDeo
+### DbDeo
 This project analyzes database code and detect database smells. Currently, it supports detection of following database smells:
 - Compound Attribute
 - Adjacency List

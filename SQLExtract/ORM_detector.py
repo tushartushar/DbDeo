@@ -1,18 +1,14 @@
 import os
-import Utils.FileUtils
+import FileUtils
 import re
 
-repo_root = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative"
-logFile = repo_root + "/log_orm.txt"
-outFile = repo_root + "/orm.csv"
-in_csv = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/new_appNature.csv"
 
 def logit(result):
     print("Match found: " + result.group(0))
-    Utils.FileUtils.writeFile(logFile, "Match found: " + result.group(0))
+    #Utils.FileUtils.writeFile(logFile, "Match found: " + result.group(0))
 
 def check_file_for_orm(file):
-    contents = Utils.FileUtils.readFileContents(file)
+    contents = FileUtils.readFileContents(file)
 
     result = re.search(r"#include\s?<sqlite3\.h>", contents)
     if(result!=None):
@@ -109,31 +105,19 @@ def check_file_for_orm(file):
         logit(result)
         return "PhythonSQLObject"
 
-    print("Nothing found.")
-    Utils.FileUtils.writeFile(logFile, "Nothing found.")
+    #print("Nothing found.")
+    #Utils.FileUtils.writeFile(logFile, "Nothing found.")
     return "NoORM"
 
-def check_folder_for_orm(dir):
+def check_folder_for_orm(repo_root, dir, outFile):
     for root, dirs, files in os.walk(os.path.join(repo_root, dir)):
         files = [f for f in files if not f[0] == '.']
         dirs[:] = [d for d in dirs if not d[0] == '.']
         for file in files:
             result = check_file_for_orm(os.path.join(root,file))
             if(result!="NoORM"):
-                Utils.FileUtils.writeFile(outFile, dir + "," + result + "\n")
+                FileUtils.writeFile(outFile, dir + "," + result + "\n")
                 return
-    Utils.FileUtils.writeFile(outFile, dir + "," + "NoORM\n")
+    FileUtils.writeFile(outFile, dir + "," + "NoORM\n")
 
 
-counter = 1
-with open(in_csv, "r+", errors='ignore') as t:
-    for tLine in t:
-        splitLine = tLine.split(",")
-        cur_dir = os.path.join(repo_root, splitLine[0])
-        if os.path.isdir(cur_dir):
-            print("Analyzing repo " + str(counter) + ": " + str(splitLine[0]) + "\n")
-            Utils.FileUtils.writeFile(logFile, "Analyzing repo " + str(counter) + ": " + str(splitLine[0]) + "\n")
-            counter += 1
-            check_folder_for_orm(splitLine[0])
-        else:
-            Utils.FileUtils.writeFile(logFile, "Repo not found: " + splitLine[0])
