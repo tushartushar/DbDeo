@@ -1,7 +1,7 @@
 import os
 import re
 
-import DataTypeConstants as Datatypes
+import Model.DataTypeConstants as Datatypes
 from DbSmellDetector import Constants
 
 

@@ -1,8 +1,6 @@
 import Utils.FileUtils
 
-outputFile = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/primaryKeyInfo.csv"
-
-def printPrimaryKeyInfo(metaModel):
+def printPrimaryKeyInfo(metaModel, outputFile):
     for createTableStmt in metaModel.createStmtList:
         for column in createTableStmt.columnList:
             if column.isPrimaryKey == True:
