@@ -13,6 +13,7 @@ import ORM_detector
 #repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative/"
 #repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/rq_sql_repo/"
 #repoTempRoot = repoResultRoot + "temp/"
+exclude_list = ["results", "sig_release-impact"]
 
 def get_folder_paths():
     if len(sys.argv) <= 1:
@@ -37,7 +38,7 @@ def extract_sql_loose():
     counter = 1
     for dir in os.listdir(repoStoreRoot):
         if os.path.isdir(os.path.join(repoStoreRoot, dir)):
-            if str(dir) == "results":
+            if str(dir) in exclude_list:
                 continue
             print("Analyzing repo " + str(counter) + ": " + str(dir) + "\n")
             counter += 1
