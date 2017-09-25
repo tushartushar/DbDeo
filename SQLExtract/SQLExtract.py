@@ -16,8 +16,12 @@ def writeFile(fileName, text):
 
 def readFileContents(fileName):
     if(os.path.exists(fileName)):
-        f = open(fileName, "r+", errors='ignore')
-        return f.read()
+        try:
+          f = open(fileName, "r+", errors='ignore')
+          return f.read()
+        except:
+          print("exception occurred while reading file")
+          pass
     return ""
 
 def extractAllSQLCode(logFile, sourceRoot, resultRoot, dir):
