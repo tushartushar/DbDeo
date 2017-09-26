@@ -13,6 +13,7 @@ import ORM_detector
 #repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative/"
 #repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/rq_sql_repo/"
 #repoTempRoot = repoResultRoot + "temp/"
+exclude_list = ["results", "sig_release-impact"]
 
 def get_folder_paths():
     if len(sys.argv) <= 1:
@@ -21,9 +22,8 @@ def get_folder_paths():
     repoStoreRoot = sys.argv[1]
     repoResultRoot = os.path.join(repoStoreRoot, "results")
     #print ("Result folder: " + repoResultRoot)
-    if os.path.exists(repoResultRoot):
-        shutil.rmtree(repoResultRoot)
-    os.makedirs(repoResultRoot)
+    if not os.path.exists(repoResultRoot):
+        os.makedirs(repoResultRoot)
     repoTempRoot = os.path.join(repoResultRoot, "temp")
     #print("Temporary folder: " + repoTempRoot)
     if not os.path.exists(repoTempRoot):
@@ -37,11 +37,12 @@ def extract_sql_loose():
     counter = 1
     for dir in os.listdir(repoStoreRoot):
         if os.path.isdir(os.path.join(repoStoreRoot, dir)):
-            if str(dir) == "results":
+            if str(dir) in exclude_list:
                 continue
             print("Analyzing repo " + str(counter) + ": " + str(dir) + "\n")
             counter += 1
-            if (os.path.isfile(os.path.join(repoTempRoot, dir + ".sql"))):
+            sqlfile = os.path.join(repoTempRoot, dir + ".sql")
+            if (os.path.isfile(sqlfile)):
                 print("The repo is already analyzed ... skipping\n")
             else:
                 SQLExtract.extractAllSQLCode(logFile, repoStoreRoot, repoTempRoot, dir)
