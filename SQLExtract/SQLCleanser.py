@@ -5,7 +5,10 @@ from Model.SQLStmtType import SQLStmtType
 def processLine(inLine):
     line = inLine.strip('"')
     #print(line)
-    parsedStmt = SQLParse.SQLParse(line)
+    try:
+        parsedStmt = SQLParse.SQLParse(line)
+    except:
+        return ""
     if(parsedStmt.getStmtType()==SQLStmtType.SELECT):
         newline = cleanseSelectStmt(line)
         return newline

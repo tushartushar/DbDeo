@@ -126,7 +126,7 @@ def collect_orm_data():
 
 
 repoStoreRoot, repoResultRoot, repoTempRoot = get_folder_paths()
-extract_sql_loose()
+#extract_sql_loose()
 cleanse_sql()
 delete_temp(repoTempRoot)
 collect_metrics()

@@ -16,7 +16,7 @@ def readFileContents(fileName):
         with open(fileName, "r+", errors='ignore') as f:
             return f.read()
    except:
-     print("Exception occurred while reading file.")
+     #print("Exception occurred while reading file.")
      pass
    return ""
 
