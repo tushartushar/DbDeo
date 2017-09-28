@@ -116,8 +116,8 @@ def check_folder_for_orm(repo_root, dir, outFile):
         for file in files:
             result = check_file_for_orm(os.path.join(root,file))
             if(result!="NoORM"):
-                FileUtils.writeFile(outFile, dir + "," + result + "\n")
+                FileUtils.writeFile(outFile, dir + "," + result)
                 return
-    FileUtils.writeFile(outFile, dir + "," + "NoORM\n")
+    FileUtils.writeFile(outFile, dir + "," + "NoORM")
 
 

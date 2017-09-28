@@ -33,15 +33,15 @@ class SmellDetector(object):
         for selectStmt in self.metaModel.selectStmtList:
             if selectStmt.isRegexPresentInWhere():
                 self.smells.add("Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 1"
-                                    + " Found in following statement: " + selectStmt.parsedStmt.stmt)
+                                )#+ " Found in following statement: " + selectStmt.parsedStmt.stmt)
         for insertStmt in self.metaModel.insertStmtList:
             if insertStmt.isContainsCompoundAttribute():
                 self.smells.add("Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 2"
-                                    + " Found in following statement: " + insertStmt.parsedStmt.stmt)
+                                )#+ " Found in following statement: " + insertStmt.parsedStmt.stmt)
         for updateStmt in self.metaModel.updateStmtList:
             if updateStmt.isContainsCommaInSet():
                 self.smells.add("Detected: " + Constants.COMPOUND_ATTRIBUTE_SMELL + " Variant: 3"
-                                    + " Found in following statement: " + updateStmt.parsedStmt.stmt)
+                                )#+ " Found in following statement: " + updateStmt.parsedStmt.stmt)
 
     def detectAdjacencyList(self):
         for createStmt in self.metaModel.createStmtList:
@@ -49,18 +49,18 @@ class SmellDetector(object):
                 if columnObj.isReferences:
                     if columnObj.referencedTable == createStmt.tableName:
                         self.smells.add("Detected: " + Constants.ADJACENCY_LIST
-                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                        )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
     def detectGodTable(self):
         for createStmt in self.metaModel.createStmtList:
             if createStmt.getColumnCount() > Constants.GOD_TABLE_MAX_COLUMN_THRESHOLD:
                 self.smells.add("Detected: " + Constants.GOD_TABLE
-                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
     def detectValuesInColDef(self):
         for createStmt in self.metaModel.createStmtList:
             for columnObj in createStmt.columnList:
                 if columnObj.areValuesConstrained:
                     self.smells.add("Detected: " + Constants.VALUES_IN_COLUMN_DEFINION
-                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                    )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
     def detectMetadataAsData(self):
         for createStmt in self.metaModel.createStmtList:
             if not createStmt.getColumnCount() == 3:
@@ -72,7 +72,7 @@ class SmellDetector(object):
                         varCharColumnCount += 1
             if varCharColumnCount >= 2:
                 self.smells.add("Detected: " + Constants.METADATA_AS_DATA
-                                    + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
 
     def detectMulticolumnAttribute(self):
         for createStmt in self.metaModel.createStmtList:
@@ -88,7 +88,7 @@ class SmellDetector(object):
                                 k = re.search(searchStr, colObj.columnName)
                                 if not k == None:
                                     self.smells.add("Detected: " + Constants.MULTICOLUMN_ATTRIBUTE
-                                        + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                                    )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
                                     found = True
                                     break
                 if found:
@@ -108,7 +108,7 @@ class SmellDetector(object):
                                 k = re.search(searchStr, cTableStmt.tableName)
                                 if not k == None:
                                     self.smells.add("Detected: " + Constants.CLONE_TABLES
-                                            + " Found in following statement: " + createStmt.parsedStmt.stmt)
+                                                    )#+ " Found in following statement: " + createStmt.parsedStmt.stmt)
 
     def detectDuplicateColumnNames(self):
         listOfDuplicates = []
@@ -129,9 +129,9 @@ class SmellDetector(object):
                                 if not colObj.shortColumnType == columnObj.shortColumnType:
                                     if not (colObj in listOfDuplicates or columnObj in listOfDuplicates):
                                         self.smells.add("Detected: " + Constants.DUPLICATE_COLUMN_NAMES
-                                        + " Found in following statement: " + createStmt.parsedStmt.stmt +
-                                                            " in following column " + columnObj.columnName +
-                                                            " and in column " + colObj.columnName + " of table " + ctStmt.tableName)
+                                                        )#+ " Found in following statement: " + createStmt.parsedStmt.stmt +
+                                                        #    " in following column " + columnObj.columnName +
+                                                        #    " and in column " + colObj.columnName + " of table " + ctStmt.tableName)
                                     if not colObj in listOfDuplicates:
                                         listOfDuplicates.append(colObj)
                                     if not columnObj in listOfDuplicates:
@@ -150,7 +150,7 @@ class SmellDetector(object):
         for keyItem in keyList:
             if not keyItem in indexList:
                 self.smells.add("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 2"
-                                    + " Missing index for the primary/foreign key : " + str(keyItem))
+                                )#+ " Missing index for the primary/foreign key : " + str(keyItem))
 
     def detectIndexShotgun_variant1(self):
         if len(self.metaModel.createIndexStmtList) == 0:
@@ -164,7 +164,7 @@ class SmellDetector(object):
         for index in indexList:
             if not index in usedAttributesInAllSelect:
                 self.smells.add("Detected: " + Constants.INDEX_SHOTGUN + " Variant: 3"
-                                    + " Following index not used : " + str(index))
+                                )#+ " Following index not used : " + str(index))
 
     def detectObsoleteColumnTypes(self):
         listOfObsoletes = []
@@ -173,11 +173,11 @@ class SmellDetector(object):
                 shortType = columnObj.shortColumnType
                 if shortType == Datatypes.TEXT or shortType == Datatypes.NTEXT or shortType == Datatypes.FLOAT or shortType == Datatypes.REAL:
                     self.smells.add("Detected: " +
-                            Constants.OBSOLETE_COLUMN_TYPES +
-                            "Found in following statement: " +
-                            createStmt.parsedStmt.stmt +
-                            " in following column " + columnObj.columnName +
-                            " of table " + createStmt.tableName)
+                            Constants.OBSOLETE_COLUMN_TYPES )#+
+                            #"Found in following statement: " +
+                            #createStmt.parsedStmt.stmt +
+                            #" in following column " + columnObj.columnName +
+                            #" of table " + createStmt.tableName)
                     if not columnObj in listOfObsoletes:
                         listOfObsoletes.append(columnObj)
 
