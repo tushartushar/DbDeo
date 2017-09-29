@@ -4,13 +4,13 @@ METRIC_FILE_PATH = "/home/tushar/repos/results/metrics.csv"
 APPNATURE_FILE_PATH = "/home/tushar/repos/results/appNature.csv"
 ORM_FILE_PATH = "/home/tushar/repos/results/orm.csv"
 PRGLANG_FILE_PATH = "/home/tushar/repos/results/progLang.csv"
-AGGREGATED_FILE_PATH = "/home/tushar/repos/results/dbSmellData/aggregated_results.csv"
+AGGREGATED_FILE_PATH = "/home/tushar/repos/results/dbSmellsData/aggregated_results.csv"
 
 METRIC_NEW_FILE_PATH = "/home/tushar/repos/results/metrics_sanitized.csv"
 APPNATURE_NEW_FILE_PATH = "/home/tushar/repos/results/appNature_sanitized.csv"
 ORM_NEW_FILE_PATH = "/home/tushar/repos/results/orm_sanitized.csv"
 PRGLANG_NEW_FILE_PATH = "/home/tushar/repos/results/progLang_sanitized.csv"
-AGGREGATED_NEW_FILE_PATH = "/home/tushar/repos/results/dbSmellData/aggregated_results_sanitized.csv"
+AGGREGATED_NEW_FILE_PATH = "/home/tushar/repos/results/aggregated_results_sanitized.csv"
 
 def write_line(fileName, text):
    try:
