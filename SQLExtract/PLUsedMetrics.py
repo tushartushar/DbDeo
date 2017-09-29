@@ -5,16 +5,22 @@ def writeFile(fileName, text):
         f.write(text + "\n")
 
 def readFileContents(fileName):
-    if(os.path.exists(fileName)):
-        with open(fileName, "r+", errors='ignore') as f:
-            return f.read()
-    return ""
+    try:
+        if(os.path.exists(fileName)):
+            with open(fileName, "r+", errors='ignore') as f:
+                return f.read()
+        return ""
+    except:
+        return ""
 
 def countLOC(file):
-    if(os.path.exists(file)):
-        with open(file, "r+", errors='ignore') as f:
-            return len(f.readlines())
-    return 0
+    try:
+        if(os.path.exists(file)):
+            with open(file, "r+", errors='ignore') as f:
+                return len(f.readlines())
+        return 0
+    except:
+        return 0
 
 
 def computePLusedMetrics(sourceRoot, dir, resultFile):
