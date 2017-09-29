@@ -95,8 +95,9 @@ def sanitize_aggregated_file(prj_dict):
             if line == "":
                 continue
             strs = line.split(",")
-            if strs[0] in prj_dict:
-                new_line = prj_dict[strs[0]]
+            repo = strs[0].strip(".txt")
+            if repo in prj_dict:
+                new_line = prj_dict[repo]
                 for i in range(1, 14):
                     new_line = new_line + "," + str(strs[i])
                 write_line(AGGREGATED_NEW_FILE_PATH, new_line)
