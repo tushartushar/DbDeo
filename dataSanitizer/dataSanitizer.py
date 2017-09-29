@@ -33,7 +33,7 @@ def sanitize_metrics_file(prj_dict):
                 continue
             if line == "":
                 continue
-            repo, select, create, insert, update, index = line.split(",")
+            repo, select, create, insert, update, index, *rest = line.split(",")
             if repo.startswith('training') | repo.startswith('opensource') | repo.startswith('successfully') | repo.startswith('results'):
                 continue
             total_sql = int(select) + int(create) + int(insert) + int(update) + int(index)
@@ -50,7 +50,7 @@ def sanitize_appnature_file(prj_dict):
             line = line.strip()
             if line == "":
                 continue
-            repo, appnature = line.split(",")
+            repo, appnature, *rest = line.split(",")
             if repo in prj_dict:
                 write_line(APPNATURE_NEW_FILE_PATH, prj_dict[repo] + "," + appnature)
 
@@ -60,7 +60,7 @@ def sanitize_orm_file(prj_dict):
             line = line.strip()
             if line == "":
                 continue
-            repo, orm = line.split(",")
+            repo, orm, *rest = line.split(",")
             if repo in prj_dict:
                 write_line(ORM_NEW_FILE_PATH, prj_dict[repo] + "," + orm)
 
