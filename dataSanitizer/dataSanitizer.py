@@ -36,7 +36,7 @@ def sanitize_metrics_file(prj_dict):
             repo, select, create, insert, update, index = line.split(",")
             if repo.startswith('training') | repo.startswith('opensource') | repo.startswith('successfully') | repo.startswith('results'):
                 continue
-            total_sql = select + create + insert + update + index
+            total_sql = int(select) + int(create) + int(insert) + int(update) + int(index)
             if total_sql > 0:
                 repo = repo.strip(".sql")
                 new_prj_name = "P" + str(proj_counter)
@@ -101,8 +101,21 @@ def sanitize_aggregated_file(prj_dict):
                     new_line = new_line + "," + str(strs[i])
                 write_line(AGGREGATED_NEW_FILE_PATH, new_line)
 
+def remove_old_files():
+    if(os.path.exists(METRIC_NEW_FILE_PATH)):
+        os.remove(METRIC_NEW_FILE_PATH)
+    if(os.path.exists(APPNATURE_NEW_FILE_PATH)):
+        os.remove(APPNATURE_NEW_FILE_PATH)
+    if(os.path.exists(ORM_NEW_FILE_PATH)):
+        os.remove(ORM_NEW_FILE_PATH)
+    if(os.path.exists(PRGLANG_NEW_FILE_PATH)):
+        os.remove(PRGLANG_NEW_FILE_PATH)
+    if(os.path.exists(AGGREGATED_NEW_FILE_PATH)):
+        os.remove(AGGREGATED_NEW_FILE_PATH)
+
 
 prj_dict = {}
+remove_old_files()
 sanitize_metrics_file(prj_dict)
 sanitize_appnature_file(prj_dict)
 sanitize_orm_file(prj_dict)
