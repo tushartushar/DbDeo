@@ -40,7 +40,7 @@ This project analyzes database code and detect database smells. Currently, it su
 
 The entry file for the project is DbDeo/Main.py. It also aggregates the results from each of the repository and prepares a csv file containing no of each type of detected smells per repository.
 
-#### Using distribution
+## Using distribution
 The compiled source has been put in ```SQLExtract_dist``` folder. You may directly execute the SQLExtract command on terminal (rather than installing dependencies and executing source code using python). The folder has executable files for Mac as well as for Windows operating system. Therefore, go to ```SQLExtract_dist\SQLExtract_win``` if you are working on Windows.
 
 SQLExtract takes one parameter - the absolute path of the folder where you have put all the projects to analyze. For instance, if the folder
