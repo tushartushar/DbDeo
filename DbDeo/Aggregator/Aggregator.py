@@ -1,12 +1,6 @@
-import sys
 import os
 from DbSmellDetector import Constants
-'''
-resultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/results"
-#resultRoot = sys.argv[1]
-aggregatedFile = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/detectedSmells30Jan.csv"
-#aggregatedFile = resultRoot + "/rawDetectedSmells.csv"
-'''
+
 
 def aggregate_results(resultRoot, aggregatedFile):
     with open(aggregatedFile, "w", errors='ignore') as f:

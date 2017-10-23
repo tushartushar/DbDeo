@@ -34,6 +34,3 @@ def AreSQLStatementsPresent(logFile, file):
         return True
     return False
 
-#repoStoreRoot = "/Users/Tushar/Documents/Workspace/alexandria-plsql-utils/"
-#logFile = repoStoreRoot + "log.txt"
-#IsRepoHaveSQLCode(repoStoreRoot, logFile)

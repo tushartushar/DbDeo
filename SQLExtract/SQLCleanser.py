@@ -68,7 +68,6 @@ def cleanseCreateTable(parsedStmt):
 
 
 def cleanseSelectStmt(line):
-    #regex = r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s.+\s)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?'
     regex = r'select\s+(\%?\w+(\(\w+\))?|(\w+\()?\*\)?)(\s?,\s?\%?\w+(\(\w+|\*\))?)*\s+from\s+(.+\s?)(where\s+(((and|or)?\s?\w+:{0,2}\w*\s?!?=\s?(([\$\%]\w+)|(\w+)|(\w:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?)\s?)))*?)?\s?(order\sby.+\n)?\s?(group\sby\s\w+)?'
     match = re.search(regex, line, flags=re.IGNORECASE)
     if match:
@@ -77,12 +76,6 @@ def cleanseSelectStmt(line):
 
 
 def cleanseUpdateStatement(line):
-    #It's taking too much time
-    #regex = r'update\s\w+\sset\s*[\",\s\']*\s*\w+:*\w*\s*=\s*[\'\":\\]*\s*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\"\\]*(\s*[\+\-\*\/]\s*\d+)?(\s*,[\",\s\'\\]*\w+:*\w*\s*=\s*[\'\":\\]*\s*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\"]?)*\s?[\s\"\',]*where\s+((\w+:*\w*\s*!?=\s*[\'\":\\]*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\"\\]*\s*(and|or)?(\s*\w+:*\w*\s*!?=\s*[\'\":\\]*\s*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\":\\]*)*)|(\w+:*\w*\s+in\s*\(.+\))|(\w+:*\w*\s*is\s*null))'
-    #regex = r'update\s\w+\sset\s*[\",\s\']*\s*\w+:*\w*\s*=\s*[\'\":\\]*\s*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\"\\]*(\s*[\+\-\*\/]\s*\d+)?(\s*,[\",\s\'\\]*\w+:*\w*\s*=\s*[\'\":\\]*\s*(\w+:*\w*|\(?\?\)?|\%\w+:*\w*|\$\w+:*\w*)\s*[\'\"]?)*\s?[\s\"\',]*where\s+(((and|or)?\s*\w+:*\w*\s*!?=[\s\'\":\\]*([\$\%]?\w+:*\w*|\(?\?\)?)[\s\'\":\\]*)|(\w+:*\w*\s+in\s*\(.+\))|(\w+:*\w*\s*is\s*(not)?\s*null))*'
-    #regex = r'update\s\w+\sset\s?\w*:{0,2}\w*\s?=\s?(([\$\%]?\w*:{0,2}\w*)|(\(?\?\)?))\s?(\s?[\+\-\*\/]\s?\d+)?(\s?,\s?\w+:{0,2}\w*\s?=\s?(([\$\%]?\w*:{0,2}\w*)|(\(?\?\)?))\s?)*\swhere\s+(((and|or)?\s?\w+:{0,2}\w*\s?!?=\s?([\$\%]?\w*:{0,2}\w*|\(?\?\)?)\s?)|(\s?(and|or)?\s?\w+:{0,2}\w*\s+in\s?\(.+\))|(\s?(and|or)?\s?\w+:{0,2}\w*\s+is\s+(not)?\s?null))*'
-    #regex = r'update\s\w+\sset\s(\s?,?\s?\w*:{0,2}\w*\s?=\s?(([\$\%]\w+)|(\w+)|(\w+:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?))\s?(\s?[\+\-\*\/]\s?\d+)?)+\s?where\s+(((and|or)?\s?\w+:{0,2}\w*\s?!?=\s?(([\$\%]\w+)|(\w+)|(\w:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?)\s?))|(\s?(and|or)?\s?\w+:{0,2}\w*\s+in\s?\(.+\))|(\s?(and|or)?\s?\w+:{0,2}\w*\s+is\s+(not)?\s?null))+'
-
     #I split the regular expression of update to simplify and make it faster.
     regex1 = r'update\s\w+\sset\s(\s?,?\s?\w*:{0,2}\w*\s?=\s?(([\$\%]\w+)|(\w+)|(\w+:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?))\s?(\s?[\+\-\*\/]\s?\d+)?)+'
     regex2 = r'\s?where\s+(((and|or)?\s?\w+:{0,2}\w*\s?!?=\s?(([\$\%]\w+)|(\w+)|(\w:{1,2}\w+)|(:{1,2}\w+)|(\(?\?\)?)\s?))|(\s?(and|or)?\s?\w+:{0,2}\w*\s+in\s?\(.+\))|(\s?(and|or)?\s?\w+:{0,2}\w*\s+is\s+(not)?\s?null))+'

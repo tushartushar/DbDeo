@@ -5,7 +5,6 @@ import re
 
 def logit(result):
     print("Match found: " + result.group(0))
-    #Utils.FileUtils.writeFile(logFile, "Match found: " + result.group(0))
 
 def check_file_for_orm(file):
     contents = FileUtils.readFileContents(file)

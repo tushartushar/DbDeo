@@ -21,15 +21,12 @@ def downloadRepo(github, repoName, repoStoreRoot, logFile):
             pass
 
 
-#repoInputFile = "/home/tushar/SQLRepoDownload/reposWithScore10.csv"
-repoInputFile = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/reposWithScore10.csv"
-#repoStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos10/"
-repoStoreRoot = "/Users/Tushar/Documents/Workspace/SQLRepoDownload/repos/"
-#repoTempStoreRoot = "/home/tushar/SQLRepoDownload/selectedRepos/"
+repoInputFile = "/Users/User1/reposWithScore10.csv"
+repoStoreRoot = "/Users/User1/SQLRepoDownload/repos/"
 repoTempStoreRoot = repoStoreRoot
 logFile = repoStoreRoot + "log.txt"
 
-g = Github("githubDownloader", "newNEW1!")
+g = Github("githubDownloader", "useyourpassword")
 file = open(repoInputFile, 'rt', errors='ignore')
 
 for line in file.readlines():

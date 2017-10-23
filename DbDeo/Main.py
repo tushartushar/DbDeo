@@ -6,19 +6,12 @@ from Model.MetaModel import MetaModel
 import shutil
 import Aggregator.Aggregator
 
-'''
-repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/newData/silo/cleansed"
-resultRoot = "/Users/Tushar/Documents/Research/dbSmells/newData/silo/result"
-#repoResultRoot = sys.argv[1]
-logFile = resultRoot + "/log.txt"
-'''
 def get_folder_paths():
     if len(sys.argv) <= 1:
         print ("Please provide path of the root folder containing SQL statements files to analyze.")
         sys.exit(1)
     repoStoreRoot = sys.argv[1]
     repoResultRoot = os.path.join(repoStoreRoot, "dbSmellsData")
-    #print ("Result folder: " + repoResultRoot)
     if os.path.exists(repoResultRoot):
         shutil.rmtree(repoResultRoot)
     os.makedirs(repoResultRoot)

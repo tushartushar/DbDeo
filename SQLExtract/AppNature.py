@@ -2,18 +2,9 @@
 # if the enclosed application is mobile-, web-, or desktop-based.
 
 import os
-import sys
 import csv
 import re
-'''
-repoStoreRoot = sys.argv[1]
-repoResultRoot = sys.argv[2]
-#repoResultRoot = os.path.join(repoStoreRoot, 'resultRepos')
-plMetricsFile = os.path.join(repoResultRoot, 'progLang2.csv')
-selectedReposFile = os.path.join(repoResultRoot, 'repoDiff4.csv')
-logFile = os.path.join(repoResultRoot, 'logAppNature2.txt')
-resultFile = os.path.join(repoResultRoot, 'appNature3.csv')
-'''
+
 
 def infer_app_nature(repoStoreRoot, repoResultRoot, plMetricsFile):
     logFile = os.path.join(repoResultRoot, 'logAppNature.txt')

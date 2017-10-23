@@ -7,13 +7,10 @@ import SQLCleanser
 import MetricsCalculator
 import PLUsedMetrics
 import AppNature
-import FileUtils
 import ORM_detector
 
-#repoStoreRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/ReposQualitative/"
-#repoResultRoot = "/Users/Tushar/Documents/Research/dbSmells/dbSmellData/qualitativeAnalysis/rq_sql_repo/"
-#repoTempRoot = repoResultRoot + "temp/"
-exclude_list = ["results", "sig_release-impact"]
+
+exclude_list = ["results"]
 
 def get_folder_paths():
     if len(sys.argv) <= 1:
@@ -126,12 +123,12 @@ def collect_orm_data():
 
 
 repoStoreRoot, repoResultRoot, repoTempRoot = get_folder_paths()
-#extract_sql_loose()
-#cleanse_sql()
-#delete_temp(repoTempRoot)
-#collect_metrics()
-plMetricsFile = os.path.join(repoResultRoot, "progLang.csv")#collect_prog_language_used_metrics()
-app_nature_file = os.path.join(repoResultRoot, 'appNature.csv')#app_nature_file = collect_app_nature_metrics()
+extract_sql_loose()
+cleanse_sql()
+delete_temp(repoTempRoot)
+collect_metrics()
+plMetricsFile = collect_prog_language_used_metrics()
+app_nature_file = collect_app_nature_metrics()
 collect_orm_data()
 print("Done - Thank you.")
 
