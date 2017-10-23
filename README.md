@@ -42,8 +42,8 @@ The entry file for the project is DbDeo/Main.py. It also aggregates the results 
 
 ## Dependencies
 The tool depends on the following external libraries:
-- [https://github.com/andialbrecht/sqlparse](sqlparse)
-- [https://github.com/PyGithub/PyGithub](pyGitHub)
+- [sqlparse](https://github.com/andialbrecht/sqlparse)
+- [pyGitHub](https://github.com/PyGithub/PyGithub)
 
 ## Using distribution
 The compiled source has been put in ```SQLExtract_dist``` folder. You may directly execute the SQLExtract command on terminal (rather than installing dependencies and executing source code using python). The folder has executable files for Mac as well as for Windows operating system. Therefore, go to ```SQLExtract_dist\SQLExtract_win``` if you are working on Windows.
