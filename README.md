@@ -51,6 +51,6 @@ The compiled source has been put in ```SQLExtract_dist``` folder. You may direct
 SQLExtract takes one parameter - the absolute path of the folder where you have put all the projects to analyze. For instance, if the folder
 */Users/Tushar/Workspace/all_projects* contains folders containing source code belonging to different projects such as *project1*, *project2*, and so on, then specify the following command:
 ```
-$ ./SQLExtract /Users/Tushar/Workspace/all_projects/
+$ ./SQLExtract /path/to/all_projects/
 ```
 
